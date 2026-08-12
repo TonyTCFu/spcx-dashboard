@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- 网页标签页标题更改为 SpaceX -->
+  <title>SpaceX</title>
+  
+  <!-- 网页标签页 Icon 图标配置 -->
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="shortcut icon" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-gold: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-ticker {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .update-time {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .version-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: #a7f3d0;
+      font-family: monospace;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    /* Verdict Banner */
+    .verdict-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .verdict-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .verdict-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .risk-tag {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    .verdict-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* 4 Signal Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .metric-num-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .metric-val-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .metric-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+    }
+
+    .metric-change {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .change-down {
+      color: var(--accent-green);
+    }
+
+    .price-up {
+      color: var(--accent-green);
+    }
+
+    /* Chart Section */
+    .charts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .chart-header {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 1.25rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand-wrap">
+        <img src="./favicon.png" alt="SpaceX Icon" class="brand-logo">
+        <div class="brand-title">
+          SpaceX 空头回补 4 大信号 Dashboard
+          <span class="badge-ticker">NASDAQ: SPCX</span>
+        </div>
+      </div>
+      <div class="update-time">
+        <span class="status-dot"></span>
+        数据更新于: <strong id="lastUpdatedTime">--</strong>
+        <span class="version-tag" id="cacheVerTag">v_init</span>
+      </div>
+    </header>
+
+    <!-- 结论 Banner -->
+    <div class="verdict-card" id="verdictCard">
+      <div class="verdict-header">
+        <div class="verdict-title" id="verdictTitle">
+          🎯 状态分析评估中...
+        </div>
+        <div class="risk-tag" id="riskTag">低风险 (Low Risk)</div>
+      </div>
+      <div class="verdict-desc" id="verdictDesc">
+        正在读取最新空头指标联动数据...
+      </div>
+    </div>
+
+    <!-- 4 大指标 Card 区域 -->
+    <div class="metrics-grid">
+      <!-- Card 1: Short Interest -->
+      <div class="metric-card">
+        <div class="metric-num-label">Signal 01</div>
+        <div class="metric-title">Short Interest (空头仓位比例)</div>
+        <div class="metric-val-wrap">
+          <div class="metric-value" id="valSI">--%</div>
+          <div class="metric-change change-down" id="changeSI">▼ --%</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Utilization -->
+      <div class="metric-card">
+        <div class="metric-num-label">Signal 02</div>
+        <div class="metric-title">Utilization (借券利用率)</div>
+        <div class="metric-val-wrap">
+          <div class="metric-value" id="valUtil">--%</div>
+          <div class="metric-change change-down" id="changeUtil">▼ --%</div>
+        </div>
+      </div>
+
+      <!-- Card 3: Borrow Rate -->
+      <div class="metric-card">
+        <div class="metric-num-label">Signal 03</div>
+        <div class="metric-title">Borrow Rate (借券年化利率)</div>
+        <div class="metric-val-wrap">
+          <div class="metric-value" id="valRate">--%</div>
+          <div class="metric-change change-down" id="changeRate">▼ --%</div>
+        </div>
+      </div>
+
+      <!-- Card 4: Stock Price -->
+      <div class="metric-card">
+        <div class="metric-num-label">Signal 04</div>
+        <div class="metric-title">Stock Price (股价)</div>
+        <div class="metric-val-wrap">
+          <div class="metric-value" id="valPrice">$--</div>
+          <div class="metric-change price-up" id="changePrice">▲ +$--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图表展示区 -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <div class="chart-header">空头仓位 % 与 借券利率 % 每日趋势</div>
+        <canvas id="shortRateChart" height="220"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">股价 ($) 与 借券利用率 (%) 联动图</div>
+        <canvas id="priceUtilChart" height="220"></canvas>
+      </div>
+    </div>
+
+    <footer>
+      SpaceX (SPCX) Quantitative Short Monitor • Automated Cache Protocol
+    </footer>
+  </div>
+
+  <script>
+    async function loadDashboardData() {
+      try {
+        const cacheBuster = Date.now();
+        const response = await fetch(`./data/metrics.json?v=${cacheBuster}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
+        const data = await response.json();
+        
+        // Update header & verdict
+        document.getElementById('lastUpdatedTime').innerText = data.last_updated;
+        document.getElementById('cacheVerTag').innerText = data.cache_version || ('v_' + cacheBuster);
+        document.getElementById('verdictTitle').innerText = '🎯 结论评级：' + data.status_summary.primary_status;
+        document.getElementById('riskTag').innerText = data.status_summary.squeeze_risk_level;
+        document.getElementById('verdictDesc').innerText = data.status_summary.description;
+
+        // Update 4 Cards
+        const cur = data.current_metrics;
+        document.getElementById('valSI').innerText = cur.short_interest_pct + '%';
+        document.getElementById('changeSI').innerText = `▼ ${Math.abs(cur.short_interest_change)}% (仓位下降)`;
+
+        document.getElementById('valUtil').innerText = cur.utilization_pct + '%';
+        document.getElementById('changeUtil').innerText = `▼ ${Math.abs(cur.utilization_change)}% (略有放松)`;
+
+        document.getElementById('valRate').innerText = cur.borrow_rate_pct + '%';
+        document.getElementById('changeRate').innerText = `▼ ${Math.abs(cur.borrow_rate_change)}% (成本降解)`;
+
+        document.getElementById('valPrice').innerText = '$' + cur.stock_price.toFixed(2);
+        document.getElementById('changePrice').innerText = `▲ +$${cur.stock_price_change.toFixed(2)} (上涨平仓)`;
+
+        // Render Charts
+        renderCharts(data.historical_data);
+
+      } catch (err) {
+        console.error('Failed to load dashboard metrics:', err);
+      }
+    }
+
+    function renderCharts(history) {
+      const labels = history.map(h => h.date);
+      const siData = history.map(h => h.short_interest);
+      const rateData = history.map(h => h.borrow_rate);
+      const utilData = history.map(h => h.utilization);
+      const priceData = history.map(h => h.price);
+
+      // Chart 1: Short Interest & Borrow Rate
+      const ctx1 = document.getElementById('shortRateChart').getContext('2d');
+      new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Short Interest (%)',
+              data: siData,
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.3,
+              fill: true
+            },
+            {
+              label: 'Borrow Rate (%)',
+              data: rateData,
+              borderColor: '#10b981',
+              borderDash: [5, 5],
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#9ca3af' } } },
+          scales: {
+            x: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+
+      // Chart 2: Price & Utilization
+      const ctx2 = document.getElementById('priceUtilChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Stock Price ($)',
+              data: priceData,
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              yAxisID: 'yPrice',
+              tension: 0.3,
+              fill: true
+            },
+            {
+              label: 'Utilization (%)',
+              data: utilData,
+              borderColor: '#06b6d4',
+              yAxisID: 'yUtil',
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#9ca3af' } } },
+          scales: {
+            x: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            yPrice: {
+              type: 'linear',
+              position: 'left',
+              ticks: { color: '#f59e0b' },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            yUtil: {
+              type: 'linear',
+              position: 'right',
+              ticks: { color: '#06b6d4' },
+              grid: { drawOnChartArea: false }
+            }
+          }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboardData);
+  </script>
+</body>
+</html>
