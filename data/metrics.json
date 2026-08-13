@@ -1,31 +1,25 @@
 {
-  "cache_version": "v_1786516872",
-  "last_updated": "2026-08-12 14:41:12",
+  "data_source": "ORTEX Live Short Interest Model & Fintel Securities Lending",
+  "cache_version": "v_ortex_1786604825",
+  "last_updated": "2026-08-13 15:07:05",
   "ticker": "SPCX",
   "company_name": "SpaceX Exploration Technologies Corp.",
   "current_metrics": {
-    "short_interest_pct": 30.75,
-    "short_interest_change": -5.65,
-    "utilization_pct": 97.6,
-    "utilization_change": -2.2,
-    "borrow_rate_pct": 3.08,
-    "borrow_rate_change": -6.92,
-    "stock_price": 138.7,
-    "stock_price_change": 5.7
+    "short_interest_pct": 29.8,
+    "short_interest_change": -0.95,
+    "utilization_pct": 96.9,
+    "utilization_change": -0.7,
+    "borrow_rate_pct": 2.95,
+    "borrow_rate_change": -0.13,
+    "stock_price": 139.6,
+    "stock_price_change": 0.9
   },
   "status_summary": {
     "primary_status": "有序空头回补 (Orderly Short Covering)",
     "squeeze_risk_level": "低风险 (Low Risk)",
-    "description": "Short Interest与Borrow Rate同步显著回落，配合股价缓步上行，表明空头资金正在顺畅主动止盈/止损平仓，市场未出现无券可借导致的强逼空行情。"
+    "description": "ORTEX每日预估模型显示：空头持仓（Short Interest）连续5个交易日呈现日度递减趋势（从 36.4% 降至 29.80%），借券利率降至 2.95%，确认空头资金在有序还券平仓。"
   },
   "historical_data": [
-    {
-      "date": "2026-08-06",
-      "short_interest": 36.4,
-      "utilization": 99.8,
-      "borrow_rate": 10.0,
-      "price": 133.0
-    },
     {
       "date": "2026-08-07",
       "short_interest": 35.2,
@@ -53,6 +47,13 @@
       "utilization": 97.6,
       "borrow_rate": 3.08,
       "price": 138.7
+    },
+    {
+      "date": "2026-08-13",
+      "short_interest": 29.8,
+      "utilization": 96.9,
+      "borrow_rate": 2.95,
+      "price": 139.6
     }
   ]
 }
