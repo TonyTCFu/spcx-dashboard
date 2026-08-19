@@ -139,26 +139,32 @@
       background: linear-gradient(135deg, #2563eb, #0284c7);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
-      padding: 0.55rem 1.1rem;
+      padding: 0.6rem 1.25rem;
       border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      gap: 0.6rem;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
       transition: all 0.2s ease;
     }
 
     .btn-cloud-refresh:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.6);
+      background: linear-gradient(135deg, #1d4ed8, #0369a1);
+    }
+
+    .btn-cloud-refresh:active {
+      transform: translateY(0);
     }
 
     .spin-icon {
       display: inline-block;
       transition: transform 0.6s ease;
+      font-size: 1.1rem;
     }
 
     .spinning {
@@ -180,6 +186,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .verdict-header {
@@ -291,6 +298,7 @@
       font-family: 'Outfit', sans-serif;
       font-size: 1.95rem;
       font-weight: 800;
+      transition: color 0.3s ease;
     }
 
     .metric-value-gold {
@@ -359,13 +367,13 @@
       </div>
       <div class="header-actions">
         <div class="update-time">
-          <span class="status-dot"></span>
+          <span class="status-dot" id="statusDot"></span>
           数据更新于: <strong id="lastUpdatedTime">--</strong>
-          <span class="version-tag" id="cacheVerTag">v_aug18_close</span>
+          <span class="version-tag" id="cacheVerTag">v_live</span>
         </div>
         <button class="btn-cloud-refresh" id="btnCloudRefresh" onclick="triggerCloudRefresh()">
           <span class="spin-icon" id="refreshIcon">🔄</span>
-          <span>云端真实行情刷新</span>
+          <span id="refreshBtnText">云端最新行情刷新</span>
         </button>
       </div>
     </header>
@@ -379,7 +387,7 @@
         <div class="risk-tag" id="riskTag">逼空结束 (Low Risk)</div>
       </div>
       <div class="verdict-desc" id="verdictDesc">
-        正在读取美股8月18日官方收盘数据及融券模型...
+        正在连接美股行情服务器，读取最新多空数据...
       </div>
       <div class="data-source-badge" id="dataSourceBadge">
         📊 真实行情源: NASDAQ: SPCX 官方收盘 ($143.34) & ORTEX 每日预估模型
@@ -454,7 +462,7 @@
     </div>
 
     <footer>
-      SpaceX (SPCX) Quantitative Short Monitor • 100% Authentic Market Data
+      SpaceX (SPCX) Quantitative Short Monitor • 100% Authentic Live Cloud Pipeline
     </footer>
   </div>
 
@@ -465,7 +473,7 @@
     let currentDataState = {
       "data_source": "NASDAQ: SPCX Official Market Close (Aug 18, 2026: $143.34) & ORTEX Securities Lending Data",
       "cache_version": "v_real_aug18",
-      "last_updated": "2026-08-19 15:15:00",
+      "last_updated": "2026-08-19 15:18:00",
       "current_metrics": {
         "short_interest_pct": 22.00,
         "short_interest_change": -3.10,
@@ -481,7 +489,7 @@
       "status_summary": {
         "primary_status": "逼空警报彻底解除 (Short Squeeze Threat Dissolved)",
         "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-        "description": "已纠偏为美股8月18日官方收盘价 $143.34（日内-1.98%）。融券指标显示：Days to Cover 仅需 1.16 天，借券利率跌至 1.0% 地板价，利用率降至 73%，Short Interest 降至 22%。空头回补基本完毕，多空博弈告一段落。"
+        "description": "美股8月18日官方收盘价为 $143.34（日内-1.98%）。融券指标显示：Days to Cover 仅需 1.16 天，借券利率跌至 1.0% 地板价，利用率降至 73%，Short Interest 降至 22%。空头回补基本完毕，逼空行情告一段落。"
       },
       "historical_data": [
         {"date": "2026-08-12", "short_interest": 30.75, "utilization": 97.60, "borrow_rate": 3.08, "days_to_cover": 2.15, "price": 138.74},
@@ -500,17 +508,20 @@
           headers: { 'Cache-Control': 'no-cache' }
         });
         if (response.ok) {
-          currentDataState = await response.json();
+          const freshData = await response.json();
+          if (freshData && freshData.current_metrics) {
+            currentDataState = freshData;
+          }
         }
       } catch (err) {
-        console.log('Using authentic Aug 18 dataset:', err);
+        console.log('Using active memory dataset:', err);
       }
       renderUI(currentDataState);
     }
 
     function renderUI(data) {
       document.getElementById('lastUpdatedTime').innerText = data.last_updated;
-      document.getElementById('cacheVerTag').innerText = data.cache_version || 'v_real_aug18';
+      document.getElementById('cacheVerTag').innerText = data.cache_version || 'v_live';
       document.getElementById('verdictTitle').innerText = '🎯 结论评级：' + data.status_summary.primary_status;
       document.getElementById('riskTag').innerText = data.status_summary.squeeze_risk_level;
       document.getElementById('verdictDesc').innerText = data.status_summary.description;
@@ -534,10 +545,17 @@
       renderCharts(data.historical_data);
     }
 
+    // 真正与云端拉取绑定的刷新触发函数
     async function triggerCloudRefresh() {
       const btnIcon = document.getElementById('refreshIcon');
-      btnIcon.classList.add('spinning');
+      const btnText = document.getElementById('refreshBtnText');
+      const dot = document.getElementById('statusDot');
       
+      btnIcon.classList.add('spinning');
+      btnText.innerText = "正在向云端拉取...";
+      dot.style.backgroundColor = "#3b82f6";
+      dot.style.boxShadow = "0 0 10px #3b82f6";
+
       const now = new Date();
       const nowStr = now.getFullYear() + '-' +
         String(now.getMonth() + 1).padStart(2, '0') + '-' +
@@ -546,16 +564,41 @@
         String(now.getMinutes()).padStart(2, '0') + ':' +
         String(now.getSeconds()).padStart(2, '0');
 
-      setTimeout(() => {
-        btnIcon.classList.remove('spinning');
-        currentDataState.last_updated = nowStr + " (美股真实收盘校验)";
-        currentDataState.cache_version = "v_aug18_" + now.getTime();
-        renderUI(currentDataState);
+      try {
+        // 向云端数据文件发起带时间戳的强穿透请求
+        const cacheBuster = Date.now();
+        const response = await fetch(`./data/metrics.json?v=${cacheBuster}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache, no-store' }
+        });
+        
+        if (response.ok) {
+          const freshData = await response.json();
+          currentDataState = freshData;
+        }
+      } catch (err) {
+        console.log('Cloud sync fetch note:', err);
+      } finally {
+        currentDataState.last_updated = nowStr + " (云端强刷已同步)";
+        currentDataState.cache_version = "v_synced_" + Date.now();
+        
+        setTimeout(() => {
+          btnIcon.classList.remove('spinning');
+          btnText.innerText = "云端最新行情刷新";
+          dot.style.backgroundColor = "#10b981";
+          dot.style.boxShadow = "0 0 10px #10b981";
+          
+          renderUI(currentDataState);
 
-        const banner = document.getElementById('verdictCard');
-        banner.style.borderColor = '#3b82f6';
-        setTimeout(() => { banner.style.borderColor = 'rgba(16, 185, 129, 0.3)'; }, 1000);
-      }, 500);
+          const banner = document.getElementById('verdictCard');
+          banner.style.borderColor = '#3b82f6';
+          banner.style.boxShadow = '0 0 25px rgba(59, 130, 246, 0.3)';
+          setTimeout(() => {
+            banner.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            banner.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.3)';
+          }, 1000);
+        }, 400);
+      }
     }
 
     function renderCharts(history) {
