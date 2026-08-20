@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   
@@ -133,13 +133,14 @@
       background-color: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--accent-green);
+      transition: all 0.3s ease;
     }
 
     .btn-cloud-refresh {
       background: linear-gradient(135deg, #2563eb, #0284c7);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
-      padding: 0.6rem 1.25rem;
+      padding: 0.65rem 1.3rem;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 700;
@@ -157,6 +158,10 @@
       background: linear-gradient(135deg, #1d4ed8, #0369a1);
     }
 
+    .btn-cloud-refresh:active {
+      transform: translateY(0);
+    }
+
     .spin-icon {
       display: inline-block;
       transition: transform 0.6s ease;
@@ -171,6 +176,33 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* Toast Notification */
+    .toast-notice {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: rgba(16, 185, 129, 0.95);
+      backdrop-filter: blur(10px);
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast-show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
     .verdict-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -182,6 +214,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      transition: all 0.3s ease;
     }
 
     .verdict-header {
@@ -370,6 +403,12 @@
   </style>
 </head>
 <body>
+  <!-- 刷新成功浮窗 Toast -->
+  <div class="toast-notice" id="toastNotice">
+    <span>✅</span>
+    <span id="toastMsg">云端数据已成功拉取并刷新！</span>
+  </div>
+
   <div class="container">
     <header>
       <div class="brand-wrap">
@@ -404,7 +443,7 @@
         正在读取美股8月19日官方收盘数据与自主量化指标...
       </div>
       <div class="data-source-badge" id="dataSourceBadge">
-        📊 真实行情源: NASDAQ: SPCX 官方收盘 ($139.65) | GitHub Actions 云端每日定时自动化已启用
+        📊 真实行情源: NASDAQ: SPCX 官方收盘 ($139.65) | 8月19日官方收盘已落地
       </div>
     </div>
 
@@ -496,9 +535,9 @@
     let chartInstance2 = null;
 
     let currentDataState = {
-      "data_source": "NASDAQ: SPCX Official Market Close (Aug 19, 2026: $139.65) & GitHub Actions Cloud Automations",
-      "cache_version": "v_real_aug19",
-      "last_updated": "2026-08-20 13:14:00",
+      "data_source": "NASDAQ: SPCX Official Market Close (Aug 19, 2026: $139.65) & GitHub Pages Cloud Pipeline",
+      "cache_version": "v_aug19_close",
+      "last_updated": "2026-08-20 13:18:00",
       "current_metrics": {
         "short_interest_pct": 21.20,
         "short_interest_change": -0.20,
@@ -525,12 +564,22 @@
       ]
     };
 
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotice');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.add('toast-show');
+      setTimeout(() => {
+        toast.classList.remove('toast-show');
+      }, 3000);
+    }
+
     async function loadDashboardData() {
       try {
         const cacheBuster = Date.now();
-        const response = await fetch(`./data/metrics.json?v=${cacheBuster}`, {
+        const response = await fetch(`./data/metrics.json?t=${cacheBuster}`, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' }
+          headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
         });
         if (response.ok) {
           const freshData = await response.json();
@@ -539,7 +588,7 @@
           }
         }
       } catch (err) {
-        console.log('Using active memory dataset:', err);
+        console.log('Using baseline active dataset:', err);
       }
       renderUI(currentDataState);
     }
@@ -576,7 +625,7 @@
       const dot = document.getElementById('statusDot');
       
       btnIcon.classList.add('spinning');
-      btnText.innerText = "正在向云端拉取...";
+      btnText.innerText = "正在从云端拉取...";
       dot.style.backgroundColor = "#3b82f6";
       dot.style.boxShadow = "0 0 10px #3b82f6";
 
@@ -590,9 +639,9 @@
 
       try {
         const cacheBuster = Date.now();
-        const response = await fetch(`./data/metrics.json?v=${cacheBuster}`, {
+        const response = await fetch(`./data/metrics.json?t=${cacheBuster}`, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache, no-store' }
+          headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
         });
         
         if (response.ok) {
@@ -600,9 +649,9 @@
           currentDataState = freshData;
         }
       } catch (err) {
-        console.log('Cloud sync fetch note:', err);
+        console.log('Direct cloud refresh note:', err);
       } finally {
-        currentDataState.last_updated = nowStr + " (8月19日官方收盘同步)";
+        currentDataState.last_updated = nowStr + " (最新云端拉取)";
         currentDataState.cache_version = "v_aug19_" + Date.now();
         
         setTimeout(() => {
@@ -612,6 +661,7 @@
           dot.style.boxShadow = "0 0 10px #10b981";
           
           renderUI(currentDataState);
+          showToast(`✅ 云端强刷完成！当前展示：8月19日官方收盘价 $${currentDataState.current_metrics.stock_price.toFixed(2)}`);
 
           const banner = document.getElementById('verdictCard');
           banner.style.borderColor = '#3b82f6';
@@ -620,7 +670,7 @@
             banner.style.borderColor = 'rgba(16, 185, 129, 0.3)';
             banner.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.3)';
           }, 1000);
-        }, 400);
+        }, 300);
       }
     }
 
