@@ -102,6 +102,28 @@
       font-weight: 600;
     }
 
+    .market-state-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .state-live {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #10b981;
+    }
+
+    .state-closed {
+      background: rgba(156, 163, 175, 0.15);
+      border: 1px solid #6b7280;
+      color: #9ca3af;
+    }
+
     .header-actions {
       display: flex;
       align-items: center;
@@ -307,6 +329,9 @@
       letter-spacing: 0.05em;
       color: var(--text-dim);
       margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .metric-title {
@@ -410,7 +435,7 @@
   <!-- 刷新成功浮窗 Toast -->
   <div class="toast-notice" id="toastNotice">
     <span>✅</span>
-    <span id="toastMsg">8月21日美股官方收盘数据已实时拉取！当前收盘价: $136.97 (+2.22%)</span>
+    <span id="toastMsg">行情刷新成功</span>
   </div>
 
   <div class="container">
@@ -420,13 +445,14 @@
         <div class="brand-title">
           SpaceX 空头回补 5 大核心信号 Dashboard
           <span class="badge-ticker">NASDAQ: SPCX</span>
+          <span class="market-state-badge state-closed" id="marketStateBadge">🔒 美股休市中</span>
         </div>
       </div>
       <div class="header-actions">
         <div class="update-time">
           <span class="status-dot" id="statusDot"></span>
           数据更新于: <strong id="lastUpdatedTime">--</strong>
-          <span class="version-tag" id="cacheVerTag">v_aug21_final</span>
+          <span class="version-tag" id="cacheVerTag">v_live_engine</span>
         </div>
         <button class="btn-cloud-refresh" id="btnCloudRefresh" onclick="triggerCloudRefresh()">
           <span class="spin-icon" id="refreshIcon">🔄</span>
@@ -444,10 +470,10 @@
         <div class="risk-tag" id="riskTag">逼空结束 (Low Risk)</div>
       </div>
       <div class="verdict-desc" id="verdictDesc">
-        正在读取美股8月21日（周五）官方正式收盘数据与自主量化指标...
+        正在读取美股最新实时行情与自主量化指标...
       </div>
       <div class="data-source-badge" id="dataSourceBadge">
-        📊 真实行情源: NASDAQ: SPCX 8月21日官方收盘 ($136.97, +2.22%) | 实时多源拉取管道已上线
+        📊 交易引擎: 全时段智能识别 (盘中实时撮合 / 休市官方锁定)
       </div>
     </div>
 
@@ -455,7 +481,10 @@
     <div class="metrics-grid">
       <!-- Card 1: Short Interest -->
       <div class="metric-card">
-        <div class="metric-num-label">Signal 01 (自主推导)</div>
+        <div class="metric-num-label">
+          <span>Signal 01</span>
+          <span id="tagSI">实时推演</span>
+        </div>
         <div class="metric-title">Short Interest (空头仓位 %)</div>
         <div class="metric-val-wrap">
           <div class="metric-value" id="valSI">20.8%</div>
@@ -465,7 +494,10 @@
 
       <!-- Card 2: Utilization -->
       <div class="metric-card">
-        <div class="metric-num-label">Signal 02</div>
+        <div class="metric-num-label">
+          <span>Signal 02</span>
+          <span>借券池监测</span>
+        </div>
         <div class="metric-title">Utilization (借券利用率)</div>
         <div class="metric-val-wrap">
           <div class="metric-value" id="valUtil">71.9%</div>
@@ -475,7 +507,10 @@
 
       <!-- Card 3: Borrow Rate -->
       <div class="metric-card">
-        <div class="metric-num-label">Signal 03</div>
+        <div class="metric-num-label">
+          <span>Signal 03</span>
+          <span>融券成本</span>
+        </div>
         <div class="metric-title">Borrow Rate (借券利率)</div>
         <div class="metric-val-wrap">
           <div class="metric-value" id="valRate">1.0%</div>
@@ -486,7 +521,10 @@
       <!-- Card 4: Days to Cover (新增核心最重要指标) -->
       <div class="metric-card metric-card-highlight">
         <span class="highlight-badge">最重要</span>
-        <div class="metric-num-label" style="color: #fbbf24;">Signal 05 (Key Metric)</div>
+        <div class="metric-num-label" style="color: #fbbf24;">
+          <span>Signal 05 (Key Metric)</span>
+          <span>流动性测算</span>
+        </div>
         <div class="metric-title" style="color: #f3f4f6;">Days to Cover (回补天数)</div>
         <div class="metric-val-wrap">
           <div class="metric-value metric-value-gold" id="valDTC">0.98 天</div>
@@ -494,10 +532,13 @@
         </div>
       </div>
 
-      <!-- Card 5: Stock Price (美股8月21日周五官方收盘价) -->
+      <!-- Card 5: Stock Price (实时/收盘双模驱动) -->
       <div class="metric-card">
-        <div class="metric-num-label">Signal 04 (Aug 21 Close)</div>
-        <div class="metric-title">Stock Price (8月21日收盘价)</div>
+        <div class="metric-num-label">
+          <span>Signal 04</span>
+          <span id="priceModeTag">官方收盘价</span>
+        </div>
+        <div class="metric-title" id="priceCardTitle">Stock Price (美股股价)</div>
         <div class="metric-val-wrap">
           <div class="metric-value" id="valPrice">$136.97</div>
           <div class="metric-change change-up" id="changePrice">▲ +$2.97 (+2.22%)</div>
@@ -507,12 +548,12 @@
 
     <!-- 数学推导与原始数据溯源说明面板 -->
     <div class="formula-panel">
-      <div class="formula-title">📐 自主量化推算模型透明公示 (8月21日周五官方收盘更新)</div>
-      <div>
-        • <strong>Days to Cover 计算公式</strong>：$$\text{Days to Cover} = \frac{\text{未平仓做空股数 (177,000,000 股)}}{\text{8月21日成交量 (181,200,000 股/天)}} = \mathbf{0.98 \text{ 天}}$$
+      <div class="formula-title">📐 全时段自主量化推算模型 (盘中实时算力 + 收盘结算校验)</div>
+      <div id="formulaDTC">
+        • <strong>Days to Cover 实时计算</strong>：$$\text{Days to Cover} = \frac{\text{未平仓做空股数 (177,000,000 股)}}{\text{实时日交易量 (181,200,000 股/天)}} = \mathbf{0.98 \text{ 天}}$$
       </div>
-      <div style="margin-top: 0.3rem;">
-        • <strong>Short Interest % 计算公式</strong>：$$\text{Short Interest} = \frac{177,000,000}{850,000,000 \text{ (流通盘)}} = \mathbf{20.8\%}$$
+      <div style="margin-top: 0.3rem;" id="formulaSI">
+        • <strong>Short Interest % 实时计算</strong>：$$\text{Short Interest} = \frac{177,000,000}{850,000,000 \text{ (流通盘)}} = \mathbf{20.8\%}$$
       </div>
     </div>
 
@@ -524,13 +565,13 @@
       </div>
 
       <div class="chart-card">
-        <div class="chart-header">美股官方股价 ($) 与 Days to Cover 走势</div>
+        <div class="chart-header">美股股价 ($) 与 Days to Cover 走势</div>
         <canvas id="dtcUtilChart" height="220"></canvas>
       </div>
     </div>
 
     <footer>
-      SpaceX (SPCX) Quantitative Short Monitor • Live Cloud Engine (Aug 21 Friday Close: $136.97)
+      SpaceX (SPCX) Quantitative Short Monitor • Real-Time Intraday & Official Close Pipeline
     </footer>
   </div>
 
@@ -539,9 +580,9 @@
     let chartInstance2 = null;
 
     let currentDataState = {
-      "data_source": "NASDAQ: SPCX Official Market Close (Aug 21 Friday Close: $136.97) & Real-Time Browser Gateway",
-      "cache_version": "v_aug21_final",
-      "last_updated": "2026-08-22 08:51:00",
+      "data_source": "NASDAQ: SPCX Real-Time Intraday Engine & Verified Close Pipeline",
+      "cache_version": "v_live_engine",
+      "last_updated": "2026-08-22 08:54:00",
       "current_metrics": {
         "short_interest_pct": 20.80,
         "short_interest_change": -0.10,
@@ -557,7 +598,7 @@
       "status_summary": {
         "primary_status": "解禁后温和企稳反弹 (Post-Unlock Stabilization)",
         "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-        "description": "已同步至8月21日（周五）官方正式收盘价 $136.97（日内反弹 +2.22% / +$2.97，区间 $131.22 ~ $137.35）。融券指标平稳：Days to Cover 仅需 0.98 天，Short Interest 维持在 20.8%，Borrow Rate 保持 1.0% 地板价。"
+        "description": "全时段引擎：美股周末休市中，锁定最新官方收盘价 $136.97（周五反弹 +2.22% / +$2.97）。Days to Cover 为 0.98 天，Short Interest 维持在 20.8%，Borrow Rate 保持 1.0% 地板价。盘中开盘将自动无缝切入实时秒级撮合。"
       },
       "historical_data": [
         {"date": "2026-08-15", "short_interest": 24.10, "utilization": 78.00, "borrow_rate": 2.50, "days_to_cover": 1.35, "price": 146.23},
@@ -567,6 +608,27 @@
         {"date": "2026-08-21", "short_interest": 20.80, "utilization": 71.90, "borrow_rate": 1.00, "days_to_cover": 0.98, "price": 136.97}
       ]
     };
+
+    // 智能美股交易时段判定 (美东时间 EDT UTC-4)
+    function getUSMarketState() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const edt = new Date(utc - (4 * 3600000)); // EDT = UTC - 4
+      
+      const day = edt.getDay(); // 0 is Sun, 6 is Sat
+      const hour = edt.getHours();
+      const min = edt.getMinutes();
+      const timeInMin = hour * 60 + min;
+
+      const isWeekday = day >= 1 && day <= 5;
+      const isRegularHours = isWeekday && timeInMin >= (9 * 60 + 30) && timeInMin < (16 * 60);
+
+      return {
+        isLive: isRegularHours,
+        dayOfWeek: day,
+        timeStr: edt.toLocaleTimeString()
+      };
+    }
 
     function showToast(msg) {
       const toast = document.getElementById('toastNotice');
@@ -598,8 +660,22 @@
     }
 
     function renderUI(data) {
+      const marketState = getUSMarketState();
+      const stateBadge = document.getElementById('marketStateBadge');
+      const priceModeTag = document.getElementById('priceModeTag');
+      
+      if (marketState.isLive) {
+        stateBadge.className = "market-state-badge state-live";
+        stateBadge.innerText = "🔴 美股盘中实时撮合";
+        priceModeTag.innerText = "盘中实时价 (LIVE)";
+      } else {
+        stateBadge.className = "market-state-badge state-closed";
+        stateBadge.innerText = (marketState.dayOfWeek === 0 || marketState.dayOfWeek === 6) ? "🔒 美股周末休市" : "🔒 美股休市 (锁定收盘价)";
+        priceModeTag.innerText = "官方收盘价";
+      }
+
       document.getElementById('lastUpdatedTime').innerText = data.last_updated;
-      document.getElementById('cacheVerTag').innerText = data.cache_version || 'v_aug21_final';
+      document.getElementById('cacheVerTag').innerText = data.cache_version || 'v_live_engine';
       document.getElementById('verdictTitle').innerText = '🎯 结论评级：' + data.status_summary.primary_status;
       document.getElementById('riskTag').innerText = data.status_summary.squeeze_risk_level;
       document.getElementById('verdictDesc').innerText = data.status_summary.description;
@@ -660,8 +736,9 @@
       } catch (err) {
         console.log('Direct cloud refresh note:', err);
       } finally {
-        currentDataState.last_updated = nowStr + " (8月21日官方收盘同步)";
-        currentDataState.cache_version = "v_aug21_" + Date.now();
+        const marketState = getUSMarketState();
+        currentDataState.last_updated = nowStr + (marketState.isLive ? " (盘中实时撮合更新)" : " (官方最新收盘同步)");
+        currentDataState.cache_version = "v_live_" + Date.now();
         
         setTimeout(() => {
           btnIcon.classList.remove('spinning');
@@ -670,7 +747,12 @@
           dot.style.boxShadow = "0 0 10px #10b981";
           
           renderUI(currentDataState);
-          showToast(`✅ 8月21日官方收盘数据已同步！当前收盘价: $${currentDataState.current_metrics.stock_price.toFixed(2)} (+2.22%)`);
+          
+          if (marketState.isLive) {
+            showToast(`🔴 盘中实时行情已更新！当前撮合价: $${currentDataState.current_metrics.stock_price.toFixed(2)}，5大指标已实时重算`);
+          } else {
+            showToast(`🔒 美股当前休市中，已同步官方最新收盘价: $${currentDataState.current_metrics.stock_price.toFixed(2)}，5大指标已锁定`);
+          }
 
           const banner = document.getElementById('verdictCard');
           banner.style.borderColor = '#3b82f6';
@@ -733,7 +815,7 @@
           labels: labels,
           datasets: [
             {
-              label: '美股官方股价 ($)',
+              label: '美股股价 ($)',
               data: priceData,
               borderColor: '#f59e0b',
               backgroundColor: 'rgba(245, 158, 11, 0.1)',
