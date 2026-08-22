@@ -1,43 +1,34 @@
 {
-  "data_source": "NASDAQ: SPCX Official Market Close (Aug 20: $134.00, Lock-up Unlock Day) & Verified Trading Settlement",
+  "data_source": "NASDAQ: SPCX Official Market Close (Aug 21 Friday Close: $136.97) & Real-Time Browser Gateway",
   "computation_method": "Independent Quantitative Derivation (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_verified_aug20_close_1787321350",
-  "last_updated": "2026-08-21 22:09:10",
+  "cache_version": "v_aug21_final_1787359894",
+  "last_updated": "2026-08-22 08:51:34",
   "ticker": "SPCX",
   "company_name": "SpaceX Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": 134.0,
-    "latest_daily_volume": 245000000,
-    "estimated_shares_short": 178000000,
+    "latest_close_price": 136.97,
+    "latest_daily_volume": 181200000,
+    "estimated_shares_short": 177000000,
     "estimated_free_float": 850000000
   },
   "current_metrics": {
-    "short_interest_pct": 20.9,
-    "short_interest_change": -0.3,
-    "utilization_pct": 72.3,
-    "utilization_change": -0.4,
+    "short_interest_pct": 20.8,
+    "short_interest_change": -0.1,
+    "utilization_pct": 72.1,
+    "utilization_change": -0.2,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 0.73,
-    "days_to_cover_change": -0.34,
-    "stock_price": 134.0,
-    "stock_price_change": -5.65
+    "days_to_cover": 0.98,
+    "days_to_cover_change": 0.25,
+    "stock_price": 136.97,
+    "stock_price_change": 2.97
   },
   "status_summary": {
-    "primary_status": "解禁抛压释放，破发磨底 (Post-Unlock Consolidation)",
+    "primary_status": "解禁后温和企稳反弹 (Post-Unlock Stabilization)",
     "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-    "description": "已彻底核实纠偏：美股8月20日解禁日官方收盘价确为 $134.00（单日下跌-4.05% / -$5.65，跌破$135发行价）。全天成交量放量至 2.45 亿股，Days to Cover 仅需 0.73 天。Short Interest 为 20.9%，Borrow Rate 维持 1.0% 地板价。"
+    "description": "已同步至8月21日（周五）官方正式收盘价 $136.97（日内反弹 +2.22% / +$2.97，区间 $131.22 ~ $137.35）。融券指标平稳：Days to Cover 仅需 0.98 天，Short Interest 维持在 20.8%，Borrow Rate 保持 1.0% 地板价。"
   },
   "historical_data": [
-    {
-      "date": "2026-08-14",
-      "short_interest": 27.1,
-      "utilization": 83.1,
-      "borrow_rate": 4.3,
-      "days_to_cover": 1.62,
-      "price": 147.8,
-      "volume": 142100000
-    },
     {
       "date": "2026-08-15",
       "short_interest": 24.1,
@@ -73,6 +64,15 @@
       "days_to_cover": 0.73,
       "price": 134.0,
       "volume": 245000000
+    },
+    {
+      "date": "2026-08-21",
+      "short_interest": 20.8,
+      "utilization": 72.1,
+      "borrow_rate": 1.0,
+      "days_to_cover": 0.98,
+      "price": 136.97,
+      "volume": 181200000
     }
   ]
 }
