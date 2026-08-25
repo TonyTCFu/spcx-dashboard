@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project Overview
-* Project Name: Radiant Oppenheimer (SpaceX & Tech Research / Quant & Automations)
+* Project Name: SpaceX股票研究 (SpaceX Stock Research / Quant & Automations)
 * Created Date: 2026-08-12
 * Primary Stack: Python, Web Search, Research & Financial Analysis
 
