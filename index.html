@@ -615,7 +615,7 @@
     </div>
 
     <footer id="footerText">
-      SpaceX (SPCX) Quantitative Short Monitor • Real-Time Client-Side Ingestion Architecture
+      SpaceX (SPCX) Quantitative Short Monitor • Real-Time Multi-Gateway Ingestion Architecture
     </footer>
   </div>
 
@@ -646,8 +646,8 @@
         "utilization_change": 0.0,
         "borrow_rate_pct": 1.0,
         "borrow_rate_change": 0.0,
-        "days_to_cover": 23.0,
-        "days_to_cover_change": 0.0,
+        "days_to_cover": 3.85,
+        "days_to_cover_change": -0.09,
         "stock_price": 137.60,
         "stock_price_change": -0.35,
         "stock_price_pct_change": -0.25
@@ -663,7 +663,7 @@
         {"date": "2026-08-21", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 2.64, "price": 136.97},
         {"date": "2026-08-24", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 3.46, "price": 135.00},
         {"date": "2026-08-25", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 3.94, "price": 137.95},
-        {"date": "2026-08-26 (Live)", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 23.0, "price": 137.60}
+        {"date": "2026-08-26 (盘中)", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 3.85, "price": 137.60}
       ]
     };
 
@@ -681,6 +681,7 @@
       const isRegularHours = !isWeekend && timeInMin >= (9 * 60 + 30) && timeInMin < (16 * 60);
       const isPreMarket = !isWeekend && timeInMin >= (4 * 60) && timeInMin < (9 * 60 + 30);
       const isAfterHours = !isWeekend && timeInMin >= (16 * 60) && timeInMin < (20 * 60);
+      const isPostMarketToday = !isWeekend && timeInMin >= (16 * 60); // 当日 16:00 之后
 
       const y = edt.getFullYear();
       const m = String(edt.getMonth() + 1).padStart(2, '0');
@@ -689,12 +690,17 @@
       const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
       const edtWeekday = weekdays[day];
 
+      const elapsedTradingMins = isRegularHours ? Math.max(1, timeInMin - (9 * 60 + 30)) : 390;
+
       return {
         isLive: isRegularHours,
         isPreMarket: isPreMarket,
         isAfterHours: isAfterHours,
+        isPostMarketToday: isPostMarketToday,
         isWeekend: isWeekend,
         dayOfWeek: day,
+        timeInMin: timeInMin,
+        elapsedTradingMins: elapsedTradingMins,
         edtDateStr: edtDateStr,
         edtDateDisplay: `${y}年${parseInt(m)}月${parseInt(d)}日（${edtWeekday}）`,
         timeStr: edt.toLocaleTimeString()
@@ -711,19 +717,21 @@
       }, 3500);
     }
 
-    // 核心引擎：浏览器端直连全球官方金融行情网关
+    // 核心引擎：多通道容灾的高可用全球金融行情网关
     async function fetchDirectMarketAPI() {
       const marketState = getUSMarketState();
       const targetUrl = `https://query2.finance.yahoo.com/v8/finance/chart/SPCX?range=1mo&interval=1d&nocache=${Date.now()}`;
+      
       const proxyUrls = [
         targetUrl,
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`
       ];
 
       for (const url of proxyUrls) {
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4500);
+          const timeoutId = setTimeout(() => controller.abort(), 4000);
           
           const response = await fetch(url, {
             cache: 'no-store',
@@ -750,7 +758,7 @@
             
             const dt = new Date(timestamps[i] * 1000);
             const dStr = dt.toISOString().split('T')[0];
-            const dtc = +(SHARES_SHORT_DEFAULT / v).toFixed(2);
+            const dtc = +(SHARES_SHORT_DEFAULT / Math.max(1, v)).toFixed(2);
             const si = +((SHARES_SHORT_DEFAULT / FLOAT_SHARES_DEFAULT) * 100).toFixed(1);
             
             histData.push({
@@ -779,19 +787,23 @@
               String(now.getSeconds()).padStart(2, '0');
 
             if (marketState.isLive) {
-              // 盘中时段：基准日为今日 (如 8月26日 周三)，计算当日实时价与当日盘中涨跌
+              // 1. 盘中撮合时段（09:30 ~ 16:00 EDT）
               const livePrice = +(meta.regularMarketPrice || latestClosed.price).toFixed(2);
               const prevCloseBase = +(meta.previousClose || meta.chartPreviousClose || latestClosed.price).toFixed(2);
               const liveDiff = +(livePrice - prevCloseBase).toFixed(2);
               const livePct = +((liveDiff / prevCloseBase) * 100).toFixed(2);
               const liveVolume = meta.regularMarketVolume || 9034209;
-              const liveDTC = +(SHARES_SHORT_DEFAULT / liveVolume).toFixed(2);
+              
+              // 盘中动态与预期全天 DTC 计算，防止开盘初成交量小导致图表刻度爆炸
+              const projectedFullDayVol = Math.round(liveVolume * (390 / Math.max(15, marketState.elapsedTradingMins)));
+              const projectedDTC = +(SHARES_SHORT_DEFAULT / Math.max(projectedFullDayVol, 1)).toFixed(2);
+              const instantDTC = +(SHARES_SHORT_DEFAULT / Math.max(liveVolume, 1)).toFixed(2);
 
               const livePoint = {
                 date: `${marketState.edtDateStr} (盘中)`,
                 price: livePrice,
                 volume: liveVolume,
-                days_to_cover: liveDTC,
+                days_to_cover: projectedDTC,
                 short_interest: 18.0,
                 utilization: 71.9,
                 borrow_rate: 1.0,
@@ -802,7 +814,7 @@
 
               return {
                 data_source: `Yahoo Finance / NASDAQ Real-Time Feed (${marketState.edtDateStr} 实时撮合价: $${livePrice.toFixed(2)})`,
-                computation_method: "Browser Client Direct Ingestion + Dynamic Quantitative DTC",
+                computation_method: "Browser Client Direct Ingestion + Dynamic Projected DTC",
                 cache_version: `v_live_${Date.now()}`,
                 last_updated: nowStr + " (盘中实时撮合)",
                 benchmark_date: marketState.edtDateStr,
@@ -812,6 +824,7 @@
                 raw_market_stats: {
                   latest_close_price: livePrice,
                   latest_daily_volume: liveVolume,
+                  projected_daily_volume: projectedFullDayVol,
                   estimated_shares_short: SHARES_SHORT_DEFAULT,
                   estimated_free_float: FLOAT_SHARES_DEFAULT
                 },
@@ -822,8 +835,9 @@
                   utilization_change: 0.0,
                   borrow_rate_pct: 1.0,
                   borrow_rate_change: 0.0,
-                  days_to_cover: liveDTC,
-                  days_to_cover_change: +(liveDTC - latestClosed.days_to_cover).toFixed(2),
+                  days_to_cover: projectedDTC,
+                  days_to_cover_instant: instantDTC,
+                  days_to_cover_change: +(projectedDTC - latestClosed.days_to_cover).toFixed(2),
                   stock_price: livePrice,
                   stock_price_change: liveDiff,
                   stock_price_pct_change: livePct
@@ -831,12 +845,56 @@
                 status_summary: {
                   primary_status: "盘中实时撮合博弈 (Live Intraday Trading)",
                   squeeze_risk_level: "极低风险 / 逼空结束 (Extremely Low Risk)",
-                  description: `美股 ${marketState.edtDateDisplay} 盘中撮合中：当前实时撮合价为 $${livePrice.toFixed(2)}（较前一日收盘 $${prevCloseBase.toFixed(2)} 变动 ${livePct >= 0 ? '+' : ''}${livePct}% / ${liveDiff >= 0 ? '+' : ''}$${liveDiff}，盘中已成交 ${liveVolume.toLocaleString()} 股）。未平仓做空 ${SHARES_SHORT_DEFAULT.toLocaleString()} 股，盘中动态 DTC 为 ${liveDTC} 天。`
+                  description: `美股 ${marketState.edtDateDisplay} 盘中撮合中：当前实时撮合价为 $${livePrice.toFixed(2)}（较前一日收盘 $${prevCloseBase.toFixed(2)} 变动 ${livePct >= 0 ? '+' : ''}${livePct}% / ${liveDiff >= 0 ? '+' : ''}$${liveDiff}，盘中已成交 ${liveVolume.toLocaleString()} 股）。未平仓做空 ${SHARES_SHORT_DEFAULT.toLocaleString()} 股，全天预期 DTC 测算为 ${projectedDTC} 天。`
                 },
                 historical_data: chartSeries
               };
+            } else if (marketState.isPostMarketToday) {
+              // 2. 当日已收盘/盘后时段（美东 16:00 之后）：当天即为最新收盘日
+              const todayPrice = +(meta.regularMarketPrice || latestClosed.price).toFixed(2);
+              const prevCloseBase = +(meta.previousClose || meta.chartPreviousClose || prevClosed.price).toFixed(2);
+              const todayDiff = +(todayPrice - prevCloseBase).toFixed(2);
+              const todayPct = +((todayDiff / prevCloseBase) * 100).toFixed(2);
+              const todayVol = meta.regularMarketVolume || latestClosed.volume;
+              const todayDTC = +(SHARES_SHORT_DEFAULT / Math.max(todayVol, 1)).toFixed(2);
+
+              return {
+                data_source: `Yahoo Finance / NASDAQ Official Feed (${marketState.edtDateStr} 官方收盘定盘价: $${todayPrice.toFixed(2)})`,
+                computation_method: "Browser Client Direct Ingestion + Full-Day DTC",
+                cache_version: `v_live_${Date.now()}`,
+                last_updated: nowStr + " (当日官方收盘结算)",
+                benchmark_date: marketState.edtDateStr,
+                benchmark_date_display: `${marketState.edtDateDisplay} 官方收盘`,
+                is_live_tick: false,
+                previous_close: prevCloseBase,
+                raw_market_stats: {
+                  latest_close_price: todayPrice,
+                  latest_daily_volume: todayVol,
+                  estimated_shares_short: SHARES_SHORT_DEFAULT,
+                  estimated_free_float: FLOAT_SHARES_DEFAULT
+                },
+                current_metrics: {
+                  short_interest_pct: 18.0,
+                  short_interest_change: 0.0,
+                  utilization_pct: 71.9,
+                  utilization_change: 0.0,
+                  borrow_rate_pct: 1.0,
+                  borrow_rate_change: 0.0,
+                  days_to_cover: todayDTC,
+                  days_to_cover_change: +(todayDTC - latestClosed.days_to_cover).toFixed(2),
+                  stock_price: todayPrice,
+                  stock_price_change: todayDiff,
+                  stock_price_pct_change: todayPct
+                },
+                status_summary: {
+                  primary_status: "当日官方收盘定盘 (Market Session Closed)",
+                  squeeze_risk_level: "极低风险 / 逼空结束 (Extremely Low Risk)",
+                  description: `官方权威行情结算：${marketState.edtDateDisplay} 纳斯达克收盘结算价为 $${todayPrice.toFixed(2)}（全天变动 ${todayPct >= 0 ? '+' : ''}${todayPct}% / ${todayDiff >= 0 ? '+' : ''}$${todayDiff}，全天成交量 ${todayVol.toLocaleString()} 股）。未平仓做空 ${SHARES_SHORT_DEFAULT.toLocaleString()} 股，官方结算 DTC 为 ${todayDTC} 天，Short Interest 占流通盘 18.0%。`
+                },
+                historical_data: recent
+              };
             } else {
-              // 非盘中（休市/盘后）：显示最近一个已结清交易日
+              // 3. 盘前 / 周末 / 夜间休市：展示最近已结清交易日
               const priceDiff = +(latestClosed.price - prevClosed.price).toFixed(2);
               const pricePct = +((priceDiff / prevClosed.price) * 100).toFixed(2);
               const dtObj = new Date(latestClosed.date + 'T00:00:00');
@@ -975,7 +1033,7 @@
       document.getElementById('changeRate').innerText = `▼ 地板成本 (${cur.borrow_rate_pct.toFixed(1)}%)`;
 
       document.getElementById('valDTC').innerText = cur.days_to_cover.toFixed(2) + ' 天';
-      document.getElementById('changeDTC').innerText = marketState.isLive ? `▼ 盘中已成交 ${(data.raw_market_stats.latest_daily_volume / 1000000).toFixed(2)}M 股` : `▼ 仅需 ${cur.days_to_cover.toFixed(2)} 天`;
+      document.getElementById('changeDTC').innerText = marketState.isLive ? `▼ 盘中预期 (已成交 ${(data.raw_market_stats.latest_daily_volume / 1000000).toFixed(2)}M 股)` : `▼ 仅需 ${cur.days_to_cover.toFixed(2)} 天`;
 
       document.getElementById('valPrice').innerText = '$' + cur.stock_price.toFixed(2);
       document.getElementById('priceCardTitle').innerText = marketState.isLive ? `Stock Price (${marketState.edtDateStr} 盘中实时)` : `Stock Price (${benchmarkDisplay})`;
