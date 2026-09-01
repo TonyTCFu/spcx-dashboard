@@ -623,47 +623,47 @@
     let chartInstance1 = null;
     let chartInstance2 = null;
 
-    const SHARES_SHORT_DEFAULT = 207781764;
-    const FLOAT_SHARES_DEFAULT = 1156042101;
+    const SHARES_SHORT_DEFAULT = 184389672;
+    const FLOAT_SHARES_DEFAULT = 1156569372;
 
     let currentDataState = {
-      "data_source": "Yahoo Finance / NASDAQ Official 1m Market Feed",
+      "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-08-31 Close: $143.69)",
       "cache_version": "v_init",
       "last_updated": "--",
-      "benchmark_date": "2026-08-26",
-      "benchmark_date_display": "2026年8月26日（周三 盘中）",
-      "is_live_tick": true,
+      "benchmark_date": "2026-08-31",
+      "benchmark_date_display": "2026年8月31日（周一）",
+      "is_live_tick": false,
       "raw_market_stats": {
-        "latest_close_price": 136.55,
-        "latest_daily_volume": 20136912,
+        "latest_close_price": 143.69,
+        "latest_daily_volume": 62979400,
         "estimated_shares_short": SHARES_SHORT_DEFAULT,
         "estimated_free_float": FLOAT_SHARES_DEFAULT
       },
       "current_metrics": {
-        "short_interest_pct": 18.0,
+        "short_interest_pct": 15.9,
         "short_interest_change": 0.0,
-        "utilization_pct": 71.9,
+        "utilization_pct": 65.0,
         "utilization_change": 0.0,
         "borrow_rate_pct": 1.0,
         "borrow_rate_change": 0.0,
-        "days_to_cover": 2.76,
-        "days_to_cover_change": -1.18,
-        "stock_price": 136.55,
-        "stock_price_change": -1.40,
-        "stock_price_pct_change": -1.01
+        "days_to_cover": 2.93,
+        "days_to_cover_change": -0.42,
+        "stock_price": 143.69,
+        "stock_price_change": 2.19,
+        "stock_price_pct_change": 1.55
       },
       "status_summary": {
-        "primary_status": "盘中实时撮合博弈 (Live Intraday Trading)",
+        "primary_status": "解禁后缩量盘整 (Post-Unlock Consolidation)",
         "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-        "description": "美股盘中实时撮合中：当前 8月26日 最新 1 分钟撮合价为 $136.55。"
+        "description": "已接入官方权威行情 API：2026年8月31日（周一） 纳斯达克正式收盘价为 $143.69（日内变动 +1.55% / +$2.19，成交量 62,979,400 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 2.93 天，Short Interest 占流通盘 15.9%。"
       },
       "historical_data": [
-        {"date": "2026-08-19", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 2.71, "price": 139.65},
-        {"date": "2026-08-20", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 1.73, "price": 134.00},
-        {"date": "2026-08-21", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 2.64, "price": 136.97},
-        {"date": "2026-08-24", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 3.46, "price": 135.00},
-        {"date": "2026-08-25", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 3.94, "price": 137.95},
-        {"date": "2026-08-26 (盘中)", "short_interest": 18.0, "utilization": 71.9, "borrow_rate": 1.0, "days_to_cover": 2.76, "price": 136.55}
+        {"date": "2026-08-24", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.06, "price": 135.00},
+        {"date": "2026-08-25", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.47, "price": 137.95},
+        {"date": "2026-08-26", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.00, "price": 139.63},
+        {"date": "2026-08-27", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.34, "price": 140.87},
+        {"date": "2026-08-28", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.35, "price": 141.50},
+        {"date": "2026-08-31", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.93, "price": 143.69}
       ]
     };
 
