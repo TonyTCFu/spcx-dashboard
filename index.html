@@ -627,15 +627,15 @@
     const FLOAT_SHARES_DEFAULT = 1156569372;
 
     let currentDataState = {
-      "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-08-31 Close: $143.69)",
+      "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-03 Close: $149.74)",
       "cache_version": "v_init",
       "last_updated": "--",
-      "benchmark_date": "2026-08-31",
-      "benchmark_date_display": "2026年8月31日（周一）",
+      "benchmark_date": "2026-09-03",
+      "benchmark_date_display": "2026年9月3日（周四）",
       "is_live_tick": false,
       "raw_market_stats": {
-        "latest_close_price": 143.69,
-        "latest_daily_volume": 62979400,
+        "latest_close_price": 149.74,
+        "latest_daily_volume": 120960430,
         "estimated_shares_short": SHARES_SHORT_DEFAULT,
         "estimated_free_float": FLOAT_SHARES_DEFAULT
       },
@@ -646,24 +646,24 @@
         "utilization_change": 0.0,
         "borrow_rate_pct": 1.0,
         "borrow_rate_change": 0.0,
-        "days_to_cover": 2.93,
-        "days_to_cover_change": -0.42,
-        "stock_price": 143.69,
-        "stock_price_change": 2.19,
-        "stock_price_pct_change": 1.55
+        "days_to_cover": 1.52,
+        "days_to_cover_change": -2.17,
+        "stock_price": 149.74,
+        "stock_price_change": 9.03,
+        "stock_price_pct_change": 6.42
       },
       "status_summary": {
-        "primary_status": "解禁后缩量盘整 (Post-Unlock Consolidation)",
-        "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-        "description": "已接入官方权威行情 API：2026年8月31日（周一） 纳斯达克正式收盘价为 $143.69（日内变动 +1.55% / +$2.19，成交量 62,979,400 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 2.93 天，Short Interest 占流通盘 15.9%。"
+        "primary_status": "放量强劲拉升 (High-Volume Bullish Breakout)",
+        "squeeze_risk_level": "中度活跃 / 快速回补 (Active Covering / Momentum)",
+        "description": "已接入官方权威行情 API：2026年9月3日（周四） 纳斯达克正式收盘价为 $149.74（日内变动 +6.42% / +$9.03，成交量 120,960,430 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 1.52 天，Short Interest 占流通盘 15.9%。"
       },
       "historical_data": [
-        {"date": "2026-08-24", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.06, "price": 135.00},
-        {"date": "2026-08-25", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.47, "price": 137.95},
-        {"date": "2026-08-26", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.00, "price": 139.63},
         {"date": "2026-08-27", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.34, "price": 140.87},
         {"date": "2026-08-28", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.35, "price": 141.50},
-        {"date": "2026-08-31", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.93, "price": 143.69}
+        {"date": "2026-08-31", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.92, "price": 143.69},
+        {"date": "2026-09-01", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.43, "price": 142.23},
+        {"date": "2026-09-02", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.69, "price": 140.71},
+        {"date": "2026-09-03", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.52, "price": 149.74}
       ]
     };
 
@@ -731,7 +731,6 @@
       
       const proxyList = [
         (t) => t,
-        (t) => `https://corsproxy.io/?url=${encodeURIComponent(t)}&_cb=${nowTs}_${randomSeed}`,
         (t) => `https://api.allorigins.win/raw?url=${encodeURIComponent(t)}&_cb=${nowTs}_${randomSeed}`,
         (t) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(t)}&_cb=${nowTs}_${randomSeed}`
       ];
@@ -744,7 +743,7 @@
         const u = fn(live1mTarget);
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 1200);
           const resp = await fetch(u, { cache: 'no-store', signal: controller.signal });
           clearTimeout(timeoutId);
           if (resp.ok) {
@@ -764,7 +763,7 @@
         const u = fn(hist1dTarget);
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 1200);
           const resp = await fetch(u, { cache: 'no-store', signal: controller.signal });
           clearTimeout(timeoutId);
           if (resp.ok) {

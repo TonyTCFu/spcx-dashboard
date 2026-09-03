@@ -65,6 +65,20 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
     now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     version_tag = f"v_yf_{latest['date']}_{int(time.time())}"
     
+    # Quantitative assessment based on price and volume dynamics
+    if price_pct >= 5.0 and latest["volume"] > prev["volume"] * 1.3:
+        primary_status = "放量强劲拉升 (High-Volume Bullish Breakout)"
+        squeeze_risk = "中度活跃 / 快速回补 (Active Covering / Momentum)"
+    elif price_pct <= -5.0:
+        primary_status = "破位下行调整 (Sharp Downside Correction)"
+        squeeze_risk = "极低风险 (Minimal Squeeze Risk)"
+    elif latest["volume"] < prev["volume"] * 0.8:
+        primary_status = "缩量盘整蓄势 (Low-Volume Consolidation)"
+        squeeze_risk = "极低风险 / 逼空结束 (Extremely Low Risk)"
+    else:
+        primary_status = "温和复苏盘整 (Moderate Rebound / Consolidation)"
+        squeeze_risk = "低风险 (Low Risk)"
+
     payload = {
         "data_source": f"Yahoo Finance / NASDAQ Official Market Feed ({latest['date']} Close: ${latest['price']:.2f})",
         "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
@@ -94,8 +108,8 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
             "stock_price_pct_change": price_pct
         },
         "status_summary": {
-            "primary_status": "解禁后缩量盘整 (Post-Unlock Consolidation)",
-            "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
+            "primary_status": primary_status,
+            "squeeze_risk_level": squeeze_risk,
             "description": f"已接入官方权威行情 API：{date_display} 纳斯达克正式收盘价为 ${latest['price']:.2f}（日内变动 {pct_sign}{price_pct}% / {pct_sign}${price_diff}，成交量 {latest['volume']:,} 股）。未平仓做空 {shares_short:,} 股，当前回补天数（DTC）为 {latest['days_to_cover']} 天，Short Interest 占流通盘 {latest['short_interest']}%。"
         },
         "historical_data": recent_metrics
