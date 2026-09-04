@@ -79,13 +79,21 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
         primary_status = "温和复苏盘整 (Moderate Rebound / Consolidation)"
         squeeze_risk = "低风险 (Low Risk)"
 
+    market_state = info.get("marketState") or "REGULAR"
+    is_live = market_state in ["REGULAR", "PRE", "POST"]
+
+    price_label = "盘中实时价" if is_live else "正式收盘价"
+    source_label = "Live Feed" if is_live else "Official Market Feed"
+
     payload = {
-        "data_source": f"Yahoo Finance / NASDAQ Official Market Feed ({latest['date']} Close: ${latest['price']:.2f})",
+        "data_source": f"Yahoo Finance / NASDAQ {source_label} ({latest['date']} {price_label}: ${latest['price']:.2f})",
         "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
         "cache_version": version_tag,
         "last_updated": now_str,
         "benchmark_date": latest["date"],
         "benchmark_date_display": date_display,
+        "is_live_tick": is_live,
+        "previous_close": prev["price"],
         "ticker": ticker_symbol,
         "company_name": info.get("longName") or "Space Exploration Technologies Corp.",
         "raw_market_stats": {
@@ -105,12 +113,13 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
             "days_to_cover_change": round(latest["days_to_cover"] - prev["days_to_cover"], 2),
             "stock_price": latest["price"],
             "stock_price_change": price_diff,
-            "stock_price_pct_change": price_pct
+            "stock_price_pct_change": price_pct,
+            "previous_close": prev["price"]
         },
         "status_summary": {
             "primary_status": primary_status,
             "squeeze_risk_level": squeeze_risk,
-            "description": f"已接入官方权威行情 API：{date_display} 纳斯达克正式收盘价为 ${latest['price']:.2f}（日内变动 {pct_sign}{price_pct}% / {pct_sign}${price_diff}，成交量 {latest['volume']:,} 股）。未平仓做空 {shares_short:,} 股，当前回补天数（DTC）为 {latest['days_to_cover']} 天，Short Interest 占流通盘 {latest['short_interest']}%。"
+            "description": f"已接入官方权威行情 API：{date_display} 纳斯达克{price_label}为 ${latest['price']:.2f}（较前一交易日收盘 ${prev['price']:.2f} 变动 {pct_sign}{price_pct}% / {pct_sign}${price_diff}，盘中已成交 {latest['volume']:,} 股）。未平仓做空 {shares_short:,} 股，当前回补天数（DTC）为 {latest['days_to_cover']} 天，Short Interest 占流通盘 {latest['short_interest']}%。"
         },
         "historical_data": recent_metrics
     }

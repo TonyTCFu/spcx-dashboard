@@ -627,15 +627,16 @@
     const FLOAT_SHARES_DEFAULT = 1156569372;
 
     let currentDataState = {
-      "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-03 Close: $149.74)",
+      "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-04 盘中实时价: $148.76)",
       "cache_version": "v_init",
       "last_updated": "--",
-      "benchmark_date": "2026-09-03",
-      "benchmark_date_display": "2026年9月3日（周四）",
-      "is_live_tick": false,
+      "benchmark_date": "2026-09-04",
+      "benchmark_date_display": "2026年9月4日（周五）",
+      "is_live_tick": true,
+      "previous_close": 149.74,
       "raw_market_stats": {
-        "latest_close_price": 149.74,
-        "latest_daily_volume": 120960430,
+        "latest_close_price": 148.76,
+        "latest_daily_volume": 29907086,
         "estimated_shares_short": SHARES_SHORT_DEFAULT,
         "estimated_free_float": FLOAT_SHARES_DEFAULT
       },
@@ -646,24 +647,25 @@
         "utilization_change": 0.0,
         "borrow_rate_pct": 1.0,
         "borrow_rate_change": 0.0,
-        "days_to_cover": 1.52,
-        "days_to_cover_change": -2.17,
-        "stock_price": 149.74,
-        "stock_price_change": 9.03,
-        "stock_price_pct_change": 6.42
+        "days_to_cover": 6.17,
+        "days_to_cover_change": 4.65,
+        "stock_price": 148.76,
+        "stock_price_change": -0.98,
+        "stock_price_pct_change": -0.65,
+        "previous_close": 149.74
       },
       "status_summary": {
-        "primary_status": "放量强劲拉升 (High-Volume Bullish Breakout)",
-        "squeeze_risk_level": "中度活跃 / 快速回补 (Active Covering / Momentum)",
-        "description": "已接入官方权威行情 API：2026年9月3日（周四） 纳斯达克正式收盘价为 $149.74（日内变动 +6.42% / +$9.03，成交量 120,960,430 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 1.52 天，Short Interest 占流通盘 15.9%。"
+        "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
+        "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
+        "description": "已接入官方权威行情 API：2026年9月4日（周五） 纳斯达克盘中实时价为 $148.76（较前一交易日收盘 $149.74 变动 -0.65% / $-0.98，盘中已成交 29,907,086 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 6.17 天，Short Interest 占流通盘 15.9%。"
       },
       "historical_data": [
-        {"date": "2026-08-27", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.34, "price": 140.87},
         {"date": "2026-08-28", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.35, "price": 141.50},
         {"date": "2026-08-31", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.92, "price": 143.69},
         {"date": "2026-09-01", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.43, "price": 142.23},
         {"date": "2026-09-02", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.69, "price": 140.71},
-        {"date": "2026-09-03", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.52, "price": 149.74}
+        {"date": "2026-09-03", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.52, "price": 149.74},
+        {"date": "2026-09-04", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 6.17, "price": 148.76}
       ]
     };
 
@@ -1024,7 +1026,10 @@
       const priceModeTag = document.getElementById('priceModeTag');
       const benchmarkDisplay = data.benchmark_date_display || data.benchmark_date || '最新交易日';
       
-      if (marketState.isLive) {
+      const isDataToday = (data.benchmark_date === marketState.edtDateStr);
+      const isLiveSession = (data.is_live_tick || isDataToday) && marketState.isLive;
+
+      if (isLiveSession) {
         stateBadge.className = "market-state-badge state-live";
         stateBadge.innerText = "🔴 美股盘中实时撮合";
         priceModeTag.innerText = "盘中实时价 (LIVE)";
@@ -1042,7 +1047,7 @@
         priceModeTag.innerText = `${benchmarkDisplay}收盘价`;
       } else {
         stateBadge.className = "market-state-badge state-closed";
-        stateBadge.innerText = "🔒 美股休市 (等待开盘)";
+        stateBadge.innerText = isDataToday ? "🔒 当日已收盘定盘" : `🔒 最新收盘基准 (${benchmarkDisplay})`;
         priceModeTag.innerText = `${benchmarkDisplay}收盘价`;
       }
 
@@ -1050,12 +1055,13 @@
       const isUp = cur.stock_price_change >= 0;
       const pctSign = (cur.stock_price_pct_change !== undefined ? (cur.stock_price_pct_change >= 0 ? '+' : '') : (isUp ? '+' : ''));
       const pctValue = (cur.stock_price_pct_change !== undefined ? cur.stock_price_pct_change : (cur.stock_price_change / (cur.stock_price - cur.stock_price_change) * 100).toFixed(2));
+      const prevCloseBase = data.previous_close || cur.previous_close;
 
       // 顶部 Banner
       const topBenchmarkEl = document.getElementById('topNoticeBenchmark');
       if (topBenchmarkEl) {
-        if (marketState.isLive) {
-          topBenchmarkEl.innerHTML = `美股盘中实时撮合基准：<strong>${marketState.edtDateDisplay} 实时价格 $${cur.stock_price.toFixed(2)} (${pctSign}${pctValue}%)</strong>`;
+        if (isLiveSession) {
+          topBenchmarkEl.innerHTML = `美股盘中实时撮合基准：<strong>${benchmarkDisplay} 实时价格 $${cur.stock_price.toFixed(2)} (${pctSign}${pctValue}%)</strong>`;
         } else {
           topBenchmarkEl.innerHTML = `美股最新官方结算基准：<strong>${benchmarkDisplay} 官方收盘 $${cur.stock_price.toFixed(2)} (${pctSign}${pctValue}%)</strong>`;
         }
@@ -1078,14 +1084,15 @@
       document.getElementById('changeRate').innerText = `▼ 地板成本 (${cur.borrow_rate_pct.toFixed(1)}%)`;
 
       document.getElementById('valDTC').innerText = cur.days_to_cover.toFixed(2) + ' 天';
-      document.getElementById('changeDTC').innerText = marketState.isLive ? `▼ 盘中预期 (已成交 ${(data.raw_market_stats.latest_daily_volume / 1000000).toFixed(2)}M 股)` : `▼ 仅需 ${cur.days_to_cover.toFixed(2)} 天`;
+      document.getElementById('changeDTC').innerText = isLiveSession ? `▼ 盘中预期 (已成交 ${(data.raw_market_stats.latest_daily_volume / 1000000).toFixed(2)}M 股)` : `▼ 仅需 ${cur.days_to_cover.toFixed(2)} 天`;
 
       document.getElementById('valPrice').innerText = '$' + cur.stock_price.toFixed(2);
-      document.getElementById('priceCardTitle').innerText = marketState.isLive ? `Stock Price (${marketState.edtDateStr} 盘中实时)` : `Stock Price (${benchmarkDisplay})`;
+      document.getElementById('priceCardTitle').innerText = isLiveSession ? `Stock Price (${benchmarkDisplay} 盘中实时)` : `Stock Price (${benchmarkDisplay})`;
       
       const changeEl = document.getElementById('changePrice');
       changeEl.className = isUp ? 'metric-change change-up' : 'metric-change change-red';
-      changeEl.innerText = (isUp ? '▲ +' : '▼ -') + '$' + Math.abs(cur.stock_price_change).toFixed(2) + ` (${pctSign}${pctValue}%)`;
+      const baseNote = prevCloseBase ? ` (基准: 前收 $${prevCloseBase.toFixed(2)})` : '';
+      changeEl.innerText = (isUp ? '▲ +' : '▼ -') + '$' + Math.abs(cur.stock_price_change).toFixed(2) + ` (${pctSign}${pctValue}%)` + baseNote;
 
       // 数学推导公示卡动态更新
       const stats = data.raw_market_stats || {};
@@ -1093,7 +1100,7 @@
       const dailyVol = (stats.latest_daily_volume || 20136912).toLocaleString();
       const freeFloat = (stats.estimated_free_float || FLOAT_SHARES_DEFAULT).toLocaleString();
       
-      const titleLabel = marketState.isLive ? `${marketState.edtDateStr} 盘中 1m 实时撮合测算` : `${benchmarkDisplay}官方收盘更新`;
+      const titleLabel = isLiveSession ? `${benchmarkDisplay} 盘中 1m 实时撮合测算` : `${benchmarkDisplay}官方收盘更新`;
       document.getElementById('formulaTitle').innerText = `📐 自主量化推算模型透明公示 (${titleLabel})`;
       document.getElementById('formulaDTC').innerHTML = `• <strong>Days to Cover 计算公式</strong>：$$\\text{Days to Cover} = \\frac{\\text{未平仓做空股数 (${shShort} 股)}}{\\text{${marketState.isLive ? '当前盘中累计成交量' : '全天成交量'} (${dailyVol} 股)}} = \\mathbf{${cur.days_to_cover.toFixed(2)} \\text{ 天}}$$`;
       document.getElementById('formulaSI').innerHTML = `• <strong>Short Interest % 计算公式</strong>：$$\\text{Short Interest} = \\frac{${shShort}}{${freeFloat} \\text{ (流通盘)}} = \\mathbf{${cur.short_interest_pct.toFixed(1)}\\%}$$`;
