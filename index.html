@@ -627,45 +627,45 @@
     const FLOAT_SHARES_DEFAULT = 1156569372;
 
     let currentDataState = {
-      "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-04 盘中实时价: $148.76)",
+      "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-10 正式收盘价: $148.18)",
       "cache_version": "v_init",
       "last_updated": "--",
-      "benchmark_date": "2026-09-04",
-      "benchmark_date_display": "2026年9月4日（周五）",
-      "is_live_tick": true,
-      "previous_close": 149.74,
+      "benchmark_date": "2026-09-10",
+      "benchmark_date_display": "2026年9月10日（周四）",
+      "is_live_tick": false,
+      "previous_close": 147.55,
       "raw_market_stats": {
-        "latest_close_price": 148.76,
-        "latest_daily_volume": 29907086,
+        "latest_close_price": 148.18,
+        "latest_daily_volume": 118355900,
         "estimated_shares_short": SHARES_SHORT_DEFAULT,
-        "estimated_free_float": FLOAT_SHARES_DEFAULT
+        "estimated_free_float": 2969855022
       },
       "current_metrics": {
-        "short_interest_pct": 15.9,
+        "short_interest_pct": 6.2,
         "short_interest_change": 0.0,
         "utilization_pct": 65.0,
         "utilization_change": 0.0,
         "borrow_rate_pct": 1.0,
         "borrow_rate_change": 0.0,
-        "days_to_cover": 6.17,
-        "days_to_cover_change": 4.65,
-        "stock_price": 148.76,
-        "stock_price_change": -0.98,
-        "stock_price_pct_change": -0.65,
-        "previous_close": 149.74
+        "days_to_cover": 1.56,
+        "days_to_cover_change": 0.03,
+        "stock_price": 148.18,
+        "stock_price_change": 0.63,
+        "stock_price_pct_change": 0.43,
+        "previous_close": 147.55
       },
       "status_summary": {
-        "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
-        "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-        "description": "已接入官方权威行情 API：2026年9月4日（周五） 纳斯达克盘中实时价为 $148.76（较前一交易日收盘 $149.74 变动 -0.65% / $-0.98，盘中已成交 29,907,086 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 6.17 天，Short Interest 占流通盘 15.9%。"
+        "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
+        "squeeze_risk_level": "低风险 (Low Risk)",
+        "description": "已接入官方权威行情 API：2026年9月10日（周四） 纳斯达克正式收盘价为 $148.18（较前一交易日收盘 $147.55 变动 +0.43% / +$0.63，成交量 118,355,900 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 1.56 天，Short Interest 占流通盘 6.2%。"
       },
       "historical_data": [
-        {"date": "2026-08-28", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.35, "price": 141.50},
-        {"date": "2026-08-31", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.92, "price": 143.69},
-        {"date": "2026-09-01", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.43, "price": 142.23},
-        {"date": "2026-09-02", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.69, "price": 140.71},
-        {"date": "2026-09-03", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.52, "price": 149.74},
-        {"date": "2026-09-04", "short_interest": 15.9, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 6.17, "price": 148.76}
+        {"date": "2026-09-02", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.69, "price": 140.71},
+        {"date": "2026-09-03", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.52, "price": 149.74},
+        {"date": "2026-09-04", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 3.75, "price": 147.95},
+        {"date": "2026-09-08", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 2.15, "price": 153.47},
+        {"date": "2026-09-09", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.53, "price": 147.55},
+        {"date": "2026-09-10", "short_interest": 6.2, "utilization": 65.0, "borrow_rate": 1.0, "days_to_cover": 1.56, "price": 148.18}
       ]
     };
 
