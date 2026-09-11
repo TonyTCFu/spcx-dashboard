@@ -1,99 +1,99 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-10 正式收盘价: $148.18)",
+  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-11 盘中实时价: $148.54)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-10_1789094594",
-  "last_updated": "2026-09-11 02:43:14",
-  "benchmark_date": "2026-09-10",
-  "benchmark_date_display": "2026年9月10日（周四）",
-  "is_live_tick": false,
-  "previous_close": 147.55,
+  "cache_version": "v_yf_2026-09-11_1789145436",
+  "last_updated": "2026-09-11 16:50:36",
+  "benchmark_date": "2026-09-11",
+  "benchmark_date_display": "2026年9月11日（周五）",
+  "is_live_tick": true,
+  "previous_close": 148.18,
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": 148.18,
-    "latest_daily_volume": 118355900,
-    "estimated_shares_short": 184389672,
+    "latest_close_price": 148.54,
+    "latest_daily_volume": 42048255,
+    "estimated_shares_short": 173619060,
     "estimated_free_float": 2969855022
   },
   "current_metrics": {
-    "short_interest_pct": 6.2,
+    "short_interest_pct": 5.8,
     "short_interest_change": 0.0,
     "utilization_pct": 65.0,
     "utilization_change": 0.0,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 1.56,
-    "days_to_cover_change": 0.03,
-    "stock_price": 148.18,
-    "stock_price_change": 0.63,
-    "stock_price_pct_change": 0.43,
-    "previous_close": 147.55
+    "days_to_cover": 4.13,
+    "days_to_cover_change": 2.66,
+    "stock_price": 148.54,
+    "stock_price_change": 0.36,
+    "stock_price_pct_change": 0.24,
+    "previous_close": 148.18
   },
   "status_summary": {
-    "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
-    "squeeze_risk_level": "低风险 (Low Risk)",
-    "description": "已接入官方权威行情 API：2026年9月10日（周四） 纳斯达克正式收盘价为 $148.18（较前一交易日收盘 $147.55 变动 +0.43% / +$0.63，盘中已成交 118,355,900 股）。未平仓做空 184,389,672 股，当前回补天数（DTC）为 1.56 天，Short Interest 占流通盘 6.2%。"
+    "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
+    "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
+    "description": "已接入官方权威行情 API：2026年9月11日（周五） 纳斯达克盘中实时价为 $148.54（较前一交易日收盘 $148.18 变动 +0.24% / +$0.36，盘中已成交 42,048,255 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 4.13 天，Short Interest 占流通盘 5.8%。"
   },
   "historical_data": [
     {
-      "date": "2026-09-02",
-      "short_interest": 6.2,
-      "utilization": 65.0,
-      "borrow_rate": 1.0,
-      "days_to_cover": 3.69,
-      "price": 140.71,
-      "volume": 49903700,
-      "shares_short": 184389672
-    },
-    {
       "date": "2026-09-03",
-      "short_interest": 6.2,
+      "short_interest": 5.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 1.52,
+      "days_to_cover": 1.43,
       "price": 149.74,
       "volume": 121333600,
-      "shares_short": 184389672
+      "shares_short": 173619060
     },
     {
       "date": "2026-09-04",
-      "short_interest": 6.2,
+      "short_interest": 5.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 3.75,
+      "days_to_cover": 3.53,
       "price": 147.95,
       "volume": 49122400,
-      "shares_short": 184389672
+      "shares_short": 173619060
     },
     {
       "date": "2026-09-08",
-      "short_interest": 6.2,
+      "short_interest": 5.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 2.15,
+      "days_to_cover": 2.02,
       "price": 153.47,
       "volume": 85840700,
-      "shares_short": 184389672
+      "shares_short": 173619060
     },
     {
       "date": "2026-09-09",
-      "short_interest": 6.2,
+      "short_interest": 5.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 1.53,
+      "days_to_cover": 1.44,
       "price": 147.55,
       "volume": 120593500,
-      "shares_short": 184389672
+      "shares_short": 173619060
     },
     {
       "date": "2026-09-10",
-      "short_interest": 6.2,
+      "short_interest": 5.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 1.56,
+      "days_to_cover": 1.47,
       "price": 148.18,
       "volume": 118355900,
-      "shares_short": 184389672
+      "shares_short": 173619060
+    },
+    {
+      "date": "2026-09-11",
+      "short_interest": 5.8,
+      "utilization": 65.0,
+      "borrow_rate": 1.0,
+      "days_to_cover": 4.13,
+      "price": 148.54,
+      "volume": 42048255,
+      "shares_short": 173619060
     }
   ]
 }
