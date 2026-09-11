@@ -1,0 +1,44 @@
+name: Auto Update SPCX Market Data
+
+on:
+  schedule:
+    # 美股交易日及盘后每 30 分钟自动运行一次 (周一至周五 13:00-22:00 UTC)
+    - cron: '*/30 13-22 * * 1-5'
+    # 每天 00:00 UTC 进行一次结算对齐
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-spcx:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install yfinance
+
+      - name: Fetch latest market metrics
+        run: |
+          python update_dashboard_data.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/metrics.json index.html
+          if git diff --staged --quiet; then
+            echo "No market data updates detected."
+          else
+            git commit -m "chore(auto): cloud auto-update SPCX market data [skip ci]"
+            git push
+          fi
