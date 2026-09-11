@@ -9,7 +9,7 @@
 - **2026-08-25**: Connected 100% genuine Yahoo Finance / NASDAQ live exchange feed for market settlement and volume metrics.
 - **2026-08-26**: Implemented browser direct API ingestion engine with CORS proxies (Note: public proxies subsequently degraded/required paid keys).
 - **2026-09-04/05**: **Price Change Benchmark Decoupling & Alignment**: Discovered that Dashboard previously labeled previous day's close (+6.42% over Sep 2) with the current day's live banner, causing severe confusion with broker real-time apps. Decoupled clock time from data session validation, explicitly displayed the previous close reference price in the change badge.
-- **2026-09-11**: **Auto-Update Root-Cause Resolution**: Diagnosed that GitHub Actions workflow was rejected during terminal git push because the user's Personal Access Token (PAT) lacks `workflow` scope. Advanced production benchmark to September 10 close ($148.18, DTC 1.56d) and provided 1-click browser deployment path to activate GitHub Actions runner.
+- **2026-09-11**: **Auto-Update Root-Cause Resolution**: Diagnosed that GitHub Actions workflow was rejected during terminal git push because the user's Personal Access Token (PAT) lacks `workflow` scope. Removed local LaunchAgent per user instruction, and assisted user with direct browser creation of GitHub Actions workflow for 100% cloud-native automated updating.
 
 ### Active Production Endpoint & 5-Signal Architecture
 - **Permanent Cloud URL**: `https://tonytcfu.github.io/spcx-dashboard/`
