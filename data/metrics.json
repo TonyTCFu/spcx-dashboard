@@ -1,8 +1,8 @@
 {
   "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-11 正式收盘价: $151.21)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-11_1789265375",
-  "last_updated": "2026-09-13 02:09:35",
+  "cache_version": "v_yf_2026-09-11_1789352861",
+  "last_updated": "2026-09-14 02:27:41",
   "benchmark_date": "2026-09-11",
   "benchmark_date_display": "2026年9月11日（周五）",
   "is_live_tick": false,
