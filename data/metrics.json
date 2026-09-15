@@ -1,8 +1,8 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-14 正式收盘价: $nan)",
+  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-14 正式收盘价: $148.15)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-14_1789431257",
-  "last_updated": "2026-09-15 00:14:17",
+  "cache_version": "v_yf_2026-09-14_1789439536",
+  "last_updated": "2026-09-15 02:32:16",
   "benchmark_date": "2026-09-14",
   "benchmark_date_display": "2026年9月14日（周一）",
   "is_live_tick": false,
@@ -10,8 +10,8 @@
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": NaN,
-    "latest_daily_volume": 67544758,
+    "latest_close_price": 148.15,
+    "latest_daily_volume": 67663000,
     "estimated_shares_short": 173619060,
     "estimated_free_float": 3589398679
   },
@@ -23,16 +23,16 @@
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
     "days_to_cover": 2.57,
-    "days_to_cover_change": 0.37,
-    "stock_price": NaN,
-    "stock_price_change": NaN,
-    "stock_price_pct_change": NaN,
+    "days_to_cover_change": 0.38,
+    "stock_price": 148.15,
+    "stock_price_change": -3.06,
+    "stock_price_pct_change": -2.02,
     "previous_close": 151.21
   },
   "status_summary": {
     "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
     "squeeze_risk_level": "低风险 (Low Risk)",
-    "description": "已接入官方权威行情 API：2026年9月14日（周一） 纳斯达克正式收盘价为 $nan（较前一交易日收盘 $151.21 变动 nan% / $nan，盘中已成交 67,544,758 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.57 天，Short Interest 占流通盘 4.8%。"
+    "description": "已接入官方权威行情 API：2026年9月14日（周一） 纳斯达克正式收盘价为 $148.15（较前一交易日收盘 $151.21 变动 -2.02% / $-3.06，盘中已成交 67,663,000 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.57 天，Short Interest 占流通盘 4.8%。"
   },
   "historical_data": [
     {
@@ -80,9 +80,9 @@
       "short_interest": 4.8,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 2.2,
+      "days_to_cover": 2.19,
       "price": 151.21,
-      "volume": 78876800,
+      "volume": 79273400,
       "shares_short": 173619060
     },
     {
@@ -91,8 +91,8 @@
       "utilization": 65.0,
       "borrow_rate": 1.0,
       "days_to_cover": 2.57,
-      "price": NaN,
-      "volume": 67544758,
+      "price": 148.15,
+      "volume": 67663000,
       "shares_short": 173619060
     }
   ]
