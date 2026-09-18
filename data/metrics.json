@@ -1,16 +1,16 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-17 盘中实时价: $154.81)",
+  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-17 正式收盘价: $nan)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-17_1789685920",
-  "last_updated": "2026-09-17 22:58:40",
+  "cache_version": "v_yf_2026-09-17_1789697753",
+  "last_updated": "2026-09-18 02:15:53",
   "benchmark_date": "2026-09-17",
   "benchmark_date_display": "2026年9月17日（周四）",
-  "is_live_tick": true,
+  "is_live_tick": false,
   "previous_close": 150.88,
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": 154.81,
+    "latest_close_price": NaN,
     "latest_daily_volume": 83395289,
     "estimated_shares_short": 173619060,
     "estimated_free_float": 3589398679
@@ -24,15 +24,15 @@
     "borrow_rate_change": 0.0,
     "days_to_cover": 2.08,
     "days_to_cover_change": 0.48,
-    "stock_price": 154.81,
-    "stock_price_change": 3.93,
-    "stock_price_pct_change": 2.6,
+    "stock_price": NaN,
+    "stock_price_change": NaN,
+    "stock_price_pct_change": NaN,
     "previous_close": 150.88
   },
   "status_summary": {
     "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
     "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-    "description": "已接入官方权威行情 API：2026年9月17日（周四） 纳斯达克盘中实时价为 $154.81（较前一交易日收盘 $150.88 变动 +2.6% / +$3.93，盘中已成交 83,395,289 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.08 天，Short Interest 占流通盘 4.8%。"
+    "description": "已接入官方权威行情 API：2026年9月17日（周四） 纳斯达克正式收盘价为 $nan（较前一交易日收盘 $150.88 变动 nan% / $nan，盘中已成交 83,395,289 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.08 天，Short Interest 占流通盘 4.8%。"
   },
   "historical_data": [
     {
@@ -91,7 +91,7 @@
       "utilization": 65.0,
       "borrow_rate": 1.0,
       "days_to_cover": 2.08,
-      "price": 154.81,
+      "price": NaN,
       "volume": 83395289,
       "shares_short": 173619060
     }
