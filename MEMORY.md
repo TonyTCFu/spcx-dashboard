@@ -10,15 +10,20 @@
 - **2026-08-26**: Implemented browser direct API ingestion engine with CORS proxies (Note: public proxies subsequently degraded/required paid keys).
 - **2026-09-04/05**: **Price Change Benchmark Decoupling & Alignment**: Discovered that Dashboard previously labeled previous day's close (+6.42% over Sep 2) with the current day's live banner, causing severe confusion with broker real-time apps. Decoupled clock time from data session validation, explicitly displayed the previous close reference price in the change badge.
 - **2026-09-11**: **Auto-Update Root-Cause Resolution & Full Cloud Verification**: Diagnosed that GitHub Actions workflow was rejected during terminal git push because the user's PAT lacked `workflow` scope. Removed local LaunchAgent per user instruction. User created `.github/workflows/update_data.yml` via Chrome. Fixed `cache: 'pip'` failure by committing root `requirements.txt`. Successfully triggered Cloud Action (`run/34555677228`), which executed in 9s and auto-committed `4235c12` back to master via `github-actions[bot]`. 100% serverless, cloud-native automated updating permanently active.
+- **2026-09-19**: **Dashboard Frozen at Sep 10 Root-Cause Resolution (NaN Ingestion & APFS Dataless Recovery)**:
+  1. *Root Cause*: On Sep 18 (Quadruple Witching, 335M vol), Yahoo Finance temporarily returned `null`/`NaN` for close price during settlement transition. Python's default `json.dump` serialized literal `NaN`, violating RFC 8259 JSON spec. The browser's `JSON.parse` threw a `SyntaxError` and fell back to the hardcoded default dataset (Sep 10).
+  2. *Ingestion Hardening*: Modified `update_dashboard_data.py` to add fallback chains (Open -> `regularMarketPrice` -> previous close), recursive float sanitization, and enforced `allow_nan=False` in `json.dump`.
+  3. *Client Hardening*: Modified `index.html` (both on init and on manual refresh) to regex-sanitize unquoted `NaN` tokens before parsing, and refreshed default fallback to Sep 18.
+  4. *Local Workspace APFS Recovery*: Replaced iCloud-evicted dataless `.git` objects and worktree files with clean local copies, fixing local git/command timeouts.
 
 ### Active Production Endpoint & 5-Signal Architecture
 - **Permanent Cloud URL**: `https://tonytcfu.github.io/spcx-dashboard/`
-- **5 Core Real Market Signals (Official September 10 Thursday Close)**:
-  1. Short Interest: 6.2% (Calculated: 184.39M Short / 2.97B Free Float)
+- **5 Core Real Market Signals (Official September 18 Friday Close)**:
+  1. Short Interest: 4.7% (Calculated: 173.62M Short / 3.70B Free Float)
   2. Utilization: 65.0% (Borrow Demand Stable)
   3. Borrow Rate: 1.0% (Floor Cost)
-  4. Days to Cover: 1.56 Days (Calculated: 184.39M Short / 118.36M Volume)
-  5. Stock Price: $148.18 (NASDAQ Thursday Official Close: +$0.63 / +0.43% vs Sep 9 Close $147.55)
+  4. Days to Cover: 0.52 Days (Calculated: 173.62M Short / 335.39M Quadruple-Witching Volume)
+  5. Stock Price: $152.71 (NASDAQ Friday Official Close: -$2.10 / -1.36% vs Sep 17 Close $154.81)
 
 ### Key Milestones
 - **2026-06-12**: SpaceX completed IPO on NASDAQ (`SPCX`) raising ~$85.7B at a ~$1.77T valuation.
