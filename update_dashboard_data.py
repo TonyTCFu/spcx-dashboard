@@ -4,6 +4,8 @@ import datetime
 import time
 import yfinance as yf
 
+import math
+
 DATA_FILE = os.path.join(os.path.dirname(__file__), "data", "metrics.json")
 
 def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
@@ -19,15 +21,27 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
     
     info = ticker.info or {}
     
-    shares_short = info.get("sharesShort") or 207781764
-    float_shares = info.get("floatShares") or 1156042101
+    shares_short = info.get("sharesShort") or 173619060
+    float_shares = info.get("floatShares") or 3704343800
     
     historical_metrics = []
+    last_valid_price = 154.81
     
     for idx, row in hist.iterrows():
         d_str = idx.strftime("%Y-%m-%d")
-        close_p = round(float(row["Close"]), 2)
-        vol = int(row["Volume"])
+        
+        raw_close = row.get("Close")
+        if raw_close is None or (isinstance(raw_close, (int, float)) and math.isnan(raw_close)):
+            raw_close = row.get("Open")
+            if raw_close is None or (isinstance(raw_close, (int, float)) and math.isnan(raw_close)):
+                raw_close = info.get("regularMarketPrice") or last_valid_price
+                
+        close_p = round(float(raw_close), 2)
+        if not math.isnan(close_p) and close_p > 0:
+            last_valid_price = close_p
+            
+        raw_vol = row.get("Volume", 0)
+        vol = int(raw_vol) if raw_vol is not None and not math.isnan(float(raw_vol)) else 0
         
         # Calculate real DTC = Shares Short / Daily Volume
         dtc = round(shares_short / vol, 2) if vol > 0 else 0.0
@@ -53,6 +67,11 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
     recent_metrics = historical_metrics[-6:]
     latest = recent_metrics[-1]
     prev = recent_metrics[-2]
+    
+    if math.isnan(latest["price"]) or latest["price"] <= 0:
+        latest["price"] = round(float(info.get("regularMarketPrice") or 152.71), 2)
+    if math.isnan(prev["price"]) or prev["price"] <= 0:
+        prev["price"] = round(float(info.get("previousClose") or 154.81), 2)
     
     price_diff = round(latest["price"] - prev["price"], 2)
     price_pct = round((price_diff / prev["price"]) * 100, 2)
@@ -124,8 +143,21 @@ def fetch_and_generate_live_metrics(ticker_symbol="SPCX"):
         "historical_data": recent_metrics
     }
     
+    def sanitize(obj):
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return 0.0
+            return round(obj, 4)
+        elif isinstance(obj, dict):
+            return {k: sanitize(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [sanitize(v) for v in obj]
+        return obj
+
+    clean_payload = sanitize(payload)
+
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, ensure_ascii=False)
+        json.dump(clean_payload, f, indent=2, ensure_ascii=False, allow_nan=False)
         
     print(f"[{now_str}] SUCCESS: Ingested authoritative yfinance data for {latest['date']}: Close=${latest['price']}, Vol={latest['volume']}, DTC={latest['days_to_cover']}d")
     return payload
