@@ -1,8 +1,8 @@
 {
   "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-09-21 正式收盘价: $151.85)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-21_1790038735",
-  "last_updated": "2026-09-22 00:58:55",
+  "cache_version": "v_yf_2026-09-21_1790044127",
+  "last_updated": "2026-09-22 02:28:47",
   "benchmark_date": "2026-09-21",
   "benchmark_date_display": "2026年9月21日（周一）",
   "is_live_tick": false,
@@ -11,7 +11,7 @@
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
     "latest_close_price": 151.85,
-    "latest_daily_volume": 81390650,
+    "latest_daily_volume": 81899500,
     "estimated_shares_short": 173619060,
     "estimated_free_float": 3704343800
   },
@@ -22,8 +22,8 @@
     "utilization_change": 0.0,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 2.13,
-    "days_to_cover_change": 1.61,
+    "days_to_cover": 2.12,
+    "days_to_cover_change": 1.6,
     "stock_price": 151.85,
     "stock_price_change": -0.86,
     "stock_price_pct_change": -0.56,
@@ -32,7 +32,7 @@
   "status_summary": {
     "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
     "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-    "description": "已接入官方权威行情 API：2026年9月21日（周一） 纳斯达克正式收盘价为 $151.85（较前一交易日收盘 $152.71 变动 -0.56% / $-0.86，盘中已成交 81,390,650 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.13 天，Short Interest 占流通盘 4.7%。"
+    "description": "已接入官方权威行情 API：2026年9月21日（周一） 纳斯达克正式收盘价为 $151.85（较前一交易日收盘 $152.71 变动 -0.56% / $-0.86，盘中已成交 81,899,500 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.12 天，Short Interest 占流通盘 4.7%。"
   },
   "historical_data": [
     {
@@ -82,7 +82,7 @@
       "borrow_rate": 1.0,
       "days_to_cover": 0.52,
       "price": 152.71,
-      "volume": 335389800,
+      "volume": 335670500,
       "shares_short": 173619060
     },
     {
@@ -90,9 +90,9 @@
       "short_interest": 4.7,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 2.13,
+      "days_to_cover": 2.12,
       "price": 151.85,
-      "volume": 81390650,
+      "volume": 81899500,
       "shares_short": 173619060
     }
   ]
