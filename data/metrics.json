@@ -1,17 +1,17 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-23 盘中实时价: $150.32)",
+  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-09-23 盘中实时价: $148.36)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-09-23_1790185114",
-  "last_updated": "2026-09-23 17:38:34",
+  "cache_version": "v_yf_2026-09-23_1790197014",
+  "last_updated": "2026-09-23 20:56:54",
   "benchmark_date": "2026-09-23",
   "benchmark_date_display": "2026年9月23日（周三）",
   "is_live_tick": true,
-  "previous_close": 151.85,
+  "previous_close": 154.72,
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": 150.32,
-    "latest_daily_volume": 29256579,
+    "latest_close_price": 148.36,
+    "latest_daily_volume": 59632725,
     "estimated_shares_short": 173619060,
     "estimated_free_float": 3704343800
   },
@@ -22,29 +22,19 @@
     "utilization_change": 0.0,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 5.93,
-    "days_to_cover_change": 3.82,
-    "stock_price": 150.32,
-    "stock_price_change": -1.53,
-    "stock_price_pct_change": -1.01,
-    "previous_close": 151.85
+    "days_to_cover": 2.91,
+    "days_to_cover_change": -0.02,
+    "stock_price": 148.36,
+    "stock_price_change": -6.36,
+    "stock_price_pct_change": -4.11,
+    "previous_close": 154.72
   },
   "status_summary": {
-    "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
-    "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
-    "description": "已接入官方权威行情 API：2026年9月23日（周三） 纳斯达克盘中实时价为 $150.32（较前一交易日收盘 $151.85 变动 -1.01% / $-1.53，盘中已成交 29,256,579 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 5.93 天，Short Interest 占流通盘 4.7%。"
+    "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
+    "squeeze_risk_level": "低风险 (Low Risk)",
+    "description": "已接入官方权威行情 API：2026年9月23日（周三） 纳斯达克盘中实时价为 $148.36（较前一交易日收盘 $154.72 变动 -4.11% / $-6.36，盘中已成交 59,632,725 股）。未平仓做空 173,619,060 股，当前回补天数（DTC）为 2.91 天，Short Interest 占流通盘 4.7%。"
   },
   "historical_data": [
-    {
-      "date": "2026-09-15",
-      "short_interest": 4.7,
-      "utilization": 65.0,
-      "borrow_rate": 1.0,
-      "days_to_cover": 2.39,
-      "price": 143.49,
-      "volume": 72746800,
-      "shares_short": 173619060
-    },
     {
       "date": "2026-09-16",
       "short_interest": 4.7,
@@ -86,13 +76,23 @@
       "shares_short": 173619060
     },
     {
+      "date": "2026-09-22",
+      "short_interest": 4.7,
+      "utilization": 65.0,
+      "borrow_rate": 1.0,
+      "days_to_cover": 2.93,
+      "price": 154.72,
+      "volume": 59197600,
+      "shares_short": 173619060
+    },
+    {
       "date": "2026-09-23",
       "short_interest": 4.7,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 5.93,
-      "price": 150.32,
-      "volume": 29256579,
+      "days_to_cover": 2.91,
+      "price": 148.36,
+      "volume": 59632725,
       "shares_short": 173619060
     }
   ]
