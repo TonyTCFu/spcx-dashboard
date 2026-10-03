@@ -1,8 +1,8 @@
 {
   "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-10-02 正式收盘价: $158.96)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-10-02_1790990190",
-  "last_updated": "2026-10-03 01:16:30",
+  "cache_version": "v_yf_2026-10-02_1790996294",
+  "last_updated": "2026-10-03 02:58:14",
   "benchmark_date": "2026-10-02",
   "benchmark_date_display": "2026年10月2日（周五）",
   "is_live_tick": false,
@@ -11,7 +11,7 @@
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
     "latest_close_price": 158.96,
-    "latest_daily_volume": 119274773,
+    "latest_daily_volume": 119446900,
     "estimated_shares_short": 162252035,
     "estimated_free_float": 4342078314
   },
@@ -32,7 +32,7 @@
   "status_summary": {
     "primary_status": "放量强劲拉升 (High-Volume Bullish Breakout)",
     "squeeze_risk_level": "中度活跃 / 快速回补 (Active Covering / Momentum)",
-    "description": "已接入官方权威行情 API：2026年10月2日（周五） 纳斯达克正式收盘价为 $158.96（较前一交易日收盘 $148.07 变动 +7.35% / +$10.89，盘中已成交 119,274,773 股）。未平仓做空 162,252,035 股，当前回补天数（DTC）为 1.36 天，Short Interest 占流通盘 3.7%。"
+    "description": "已接入官方权威行情 API：2026年10月2日（周五） 纳斯达克正式收盘价为 $158.96（较前一交易日收盘 $148.07 变动 +7.35% / +$10.89，盘中已成交 119,446,900 股）。未平仓做空 162,252,035 股，当前回补天数（DTC）为 1.36 天，Short Interest 占流通盘 3.7%。"
   },
   "historical_data": [
     {
@@ -92,7 +92,7 @@
       "borrow_rate": 1.0,
       "days_to_cover": 1.36,
       "price": 158.96,
-      "volume": 119274773,
+      "volume": 119446900,
       "shares_short": 162252035
     }
   ]
