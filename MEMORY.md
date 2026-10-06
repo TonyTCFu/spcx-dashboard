@@ -1,5 +1,10 @@
 # MEMORY.md
 
+## 2026-09-22 TypeSafe 研究辅助边界
+
+- `AGENTS.md` 规定仅在引入新闻、研报、事件叙事或来源文档时使用 `typesafe-ai` 进行分类、证据核验、相关性排序或影响优先级评估。
+- 输出仅为研究辅助，不能影响价格/空头数据抓取、数值计算、仪表盘市场指标或未经独立来源验证的投资结论。
+
 ## Project Memory & Context
 
 ### Architectural & Research Decisions
@@ -16,14 +21,19 @@
   3. *Client Hardening*: Modified `index.html` (both on init and on manual refresh) to regex-sanitize unquoted `NaN` tokens before parsing, and refreshed default fallback to Sep 18.
   4. *Local Workspace APFS Recovery*: Replaced iCloud-evicted dataless `.git` objects and worktree files with clean local copies, fixing local git/command timeouts.
 
+- **2026-10-06/07**: **Dashboard Stale at Monday Oct 5 Resolution (GitHub Actions Cron Congestion & Schedule Hardening)**:
+  1. *Root Cause*: GitHub Actions cron `*/30 13-22 * * 1-5` on free tier suffered severe queue congestion/discarding during standard :00 and :30 minutes. Between 13:00 and 16:30 UTC, GitHub Actions scheduled runs were dropped entirely, leaving `data/metrics.json` at Monday Oct 5 post-close ($171.09).
+  2. *Schedule Optimization*: Updated `.github/workflows/update_data.yml` to run every 20 minutes on off-peak minutes `7,27,47 13-22 * * 1-5` and `15 0 * * *` to bypass top-of-hour congestion and increase execution frequency.
+  3. *Immediate Data Alignment*: Synced live Tuesday Oct 6 intraday quote ($173.45 / DTC 2.38d / SI 3.7%) into `data/metrics.json` and updated fallback in `index.html`.
+
 ### Active Production Endpoint & 5-Signal Architecture
 - **Permanent Cloud URL**: `https://tonytcfu.github.io/spcx-dashboard/`
-- **5 Core Real Market Signals (Official September 18 Friday Close)**:
-  1. Short Interest: 4.7% (Calculated: 173.62M Short / 3.70B Free Float)
+- **5 Core Real Market Signals (Live October 6 Tuesday Intraday)**:
+  1. Short Interest: 3.7% (Calculated: 162.25M Short / 4.33B Free Float)
   2. Utilization: 65.0% (Borrow Demand Stable)
   3. Borrow Rate: 1.0% (Floor Cost)
-  4. Days to Cover: 0.52 Days (Calculated: 173.62M Short / 335.39M Quadruple-Witching Volume)
-  5. Stock Price: $152.71 (NASDAQ Friday Official Close: -$2.10 / -1.36% vs Sep 17 Close $154.81)
+  4. Days to Cover: 2.38 Days (Calculated: 162.25M Short / 68.26M Intraday Volume)
+  5. Stock Price: $173.45 (NASDAQ Tuesday Live: +$2.36 / +1.38% vs Oct 5 Close $171.09)
 
 ### Key Milestones
 - **2026-06-12**: SpaceX completed IPO on NASDAQ (`SPCX`) raising ~$85.7B at a ~$1.77T valuation.
@@ -31,7 +41,6 @@
 - **2026-09-03**: SpaceX surged +6.42% to $149.74 with volume spiking to 120.96M shares, driving DTC down to 1.52 days.
 - **2026-09-08**: SpaceX hit local high of $153.47 post-Labor Day.
 - **2026-09-10**: SpaceX stabilized at $148.18 with 118.36M volume and DTC at 1.56 days.
-
 
 
 
