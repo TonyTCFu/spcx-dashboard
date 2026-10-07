@@ -28,12 +28,12 @@
 
 ### Active Production Endpoint & 5-Signal Architecture
 - **Permanent Cloud URL**: `https://tonytcfu.github.io/spcx-dashboard/`
-- **5 Core Real Market Signals (Live October 6 Tuesday Intraday)**:
+- **5 Core Real Market Signals (Official October 6 Tuesday Close)**:
   1. Short Interest: 3.7% (Calculated: 162.25M Short / 4.33B Free Float)
   2. Utilization: 65.0% (Borrow Demand Stable)
   3. Borrow Rate: 1.0% (Floor Cost)
-  4. Days to Cover: 2.38 Days (Calculated: 162.25M Short / 68.26M Intraday Volume)
-  5. Stock Price: $173.45 (NASDAQ Tuesday Live: +$2.36 / +1.38% vs Oct 5 Close $171.09)
+  4. Days to Cover: 1.53 Days (Calculated: 162.25M Short / 106.39M Official Volume)
+  5. Stock Price: $171.92 (NASDAQ Tuesday Official Close: +$0.83 / +0.49% vs Oct 5 Close $171.09)
 
 ### Key Milestones
 - **2026-06-12**: SpaceX completed IPO on NASDAQ (`SPCX`) raising ~$85.7B at a ~$1.77T valuation.
