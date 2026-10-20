@@ -1,17 +1,17 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-10-19 正式收盘价: $147.96)",
+  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-10-20 盘中实时价: $147.75)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-10-19_1792464058",
-  "last_updated": "2026-10-20 02:40:58",
-  "benchmark_date": "2026-10-19",
-  "benchmark_date_display": "2026年10月19日（周一）",
-  "is_live_tick": false,
-  "previous_close": 146.03,
+  "cache_version": "v_yf_2026-10-20_1792518131",
+  "last_updated": "2026-10-20 17:42:11",
+  "benchmark_date": "2026-10-20",
+  "benchmark_date_display": "2026年10月20日（周二）",
+  "is_live_tick": true,
+  "previous_close": 147.96,
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
-    "latest_close_price": 147.96,
-    "latest_daily_volume": 73752000,
+    "latest_close_price": 147.75,
+    "latest_daily_volume": 54722291,
     "estimated_shares_short": 180996777,
     "estimated_free_float": 4971640124
   },
@@ -22,29 +22,19 @@
     "utilization_change": 0.0,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 2.45,
-    "days_to_cover_change": 0.41,
-    "stock_price": 147.96,
-    "stock_price_change": 1.93,
-    "stock_price_pct_change": 1.32,
-    "previous_close": 146.03
+    "days_to_cover": 3.31,
+    "days_to_cover_change": 0.86,
+    "stock_price": 147.75,
+    "stock_price_change": -0.21,
+    "stock_price_pct_change": -0.14,
+    "previous_close": 147.96
   },
   "status_summary": {
-    "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
-    "squeeze_risk_level": "低风险 (Low Risk)",
-    "description": "已接入官方权威行情 API：2026年10月19日（周一） 纳斯达克正式收盘价为 $147.96（较前一交易日收盘 $146.03 变动 +1.32% / +$1.93，盘中已成交 73,752,000 股）。未平仓做空 180,996,777 股，当前回补天数（DTC）为 2.45 天，Short Interest 占流通盘 3.6%。"
+    "primary_status": "缩量盘整蓄势 (Low-Volume Consolidation)",
+    "squeeze_risk_level": "极低风险 / 逼空结束 (Extremely Low Risk)",
+    "description": "已接入官方权威行情 API：2026年10月20日（周二） 纳斯达克盘中实时价为 $147.75（较前一交易日收盘 $147.96 变动 -0.14% / $-0.21，盘中已成交 54,722,291 股）。未平仓做空 180,996,777 股，当前回补天数（DTC）为 3.31 天，Short Interest 占流通盘 3.6%。"
   },
   "historical_data": [
-    {
-      "date": "2026-10-12",
-      "short_interest": 3.6,
-      "utilization": 65.0,
-      "borrow_rate": 1.0,
-      "days_to_cover": 2.68,
-      "price": 163.42,
-      "volume": 67434500,
-      "shares_short": 180996777
-    },
     {
       "date": "2026-10-13",
       "short_interest": 3.6,
@@ -93,6 +83,16 @@
       "days_to_cover": 2.45,
       "price": 147.96,
       "volume": 73752000,
+      "shares_short": 180996777
+    },
+    {
+      "date": "2026-10-20",
+      "short_interest": 3.6,
+      "utilization": 65.0,
+      "borrow_rate": 1.0,
+      "days_to_cover": 3.31,
+      "price": 147.75,
+      "volume": 54722291,
       "shares_short": 180996777
     }
   ]
