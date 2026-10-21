@@ -1,17 +1,17 @@
 {
-  "data_source": "Yahoo Finance / NASDAQ Live Feed (2026-10-20 盘中实时价: $147.79)",
+  "data_source": "Yahoo Finance / NASDAQ Official Market Feed (2026-10-20 正式收盘价: $147.79)",
   "computation_method": "API Ingestion + Quantitative Formula (DTC = Shares Short / Volume, SI = Shares Short / Float)",
-  "cache_version": "v_yf_2026-10-20_1792540790",
-  "last_updated": "2026-10-20 23:59:50",
+  "cache_version": "v_yf_2026-10-20_1792550080",
+  "last_updated": "2026-10-21 02:34:40",
   "benchmark_date": "2026-10-20",
   "benchmark_date_display": "2026年10月20日（周二）",
-  "is_live_tick": true,
+  "is_live_tick": false,
   "previous_close": 147.96,
   "ticker": "SPCX",
   "company_name": "Space Exploration Technologies Corp.",
   "raw_market_stats": {
     "latest_close_price": 147.79,
-    "latest_daily_volume": 99549776,
+    "latest_daily_volume": 108298500,
     "estimated_shares_short": 180996777,
     "estimated_free_float": 4971640124
   },
@@ -22,8 +22,8 @@
     "utilization_change": 0.0,
     "borrow_rate_pct": 1.0,
     "borrow_rate_change": 0.0,
-    "days_to_cover": 1.82,
-    "days_to_cover_change": -0.62,
+    "days_to_cover": 1.67,
+    "days_to_cover_change": -0.77,
     "stock_price": 147.79,
     "stock_price_change": -0.17,
     "stock_price_pct_change": -0.11,
@@ -32,7 +32,7 @@
   "status_summary": {
     "primary_status": "温和复苏盘整 (Moderate Rebound / Consolidation)",
     "squeeze_risk_level": "低风险 (Low Risk)",
-    "description": "已接入官方权威行情 API：2026年10月20日（周二） 纳斯达克盘中实时价为 $147.79（较前一交易日收盘 $147.96 变动 -0.11% / $-0.17，盘中已成交 99,549,776 股）。未平仓做空 180,996,777 股，当前回补天数（DTC）为 1.82 天，Short Interest 占流通盘 3.6%。"
+    "description": "已接入官方权威行情 API：2026年10月20日（周二） 纳斯达克正式收盘价为 $147.79（较前一交易日收盘 $147.96 变动 -0.11% / $-0.17，盘中已成交 108,298,500 股）。未平仓做空 180,996,777 股，当前回补天数（DTC）为 1.67 天，Short Interest 占流通盘 3.6%。"
   },
   "historical_data": [
     {
@@ -90,9 +90,9 @@
       "short_interest": 3.6,
       "utilization": 65.0,
       "borrow_rate": 1.0,
-      "days_to_cover": 1.82,
+      "days_to_cover": 1.67,
       "price": 147.79,
-      "volume": 99549776,
+      "volume": 108298500,
       "shares_short": 180996777
     }
   ]
